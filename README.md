@@ -164,6 +164,40 @@ smart-queue-fee-payment-system/
 **Status:** ✅ Completed
 
 ---
+## 📅 Day 2 – Flask Backend Fundamentals
+
+### 🎯 Objective
+
+Build the foundation of the backend by learning Flask and understanding how a web server handles requests before integrating a database.
+
+### ✅ Tasks Completed
+
+* Installed and configured **Flask**.
+* Created the first Flask application (`app.py`).
+* Learned how to create **routes** using the `@app.route()` decorator.
+* Understood the difference between **frontend** and **backend**.
+* Returned both **plain text** and **JSON** responses from the server.
+* Tested API endpoints in the browser and using Postman.
+
+### 📚 Key Concepts Learned
+
+* What Flask is and why it is used.
+* How API endpoints work.
+* HTTP request and response basics.
+* JSON as a data exchange format.
+* Running a Flask development server.
+
+### 🚧 Current Status
+
+The backend foundation is ready. Database integration has been intentionally postponed until the core backend concepts and queue logic are fully understood. For now, the project will use temporary in-memory data structures during development.
+
+### 🚀 Next Steps
+
+* Build the queue management logic.
+* Create API endpoints for adding, viewing, and removing users from the queue.
+* Test all endpoints with Postman.
+* Integrate MySQL after completing the backend logic.
+
 
 ## 🚀 Future Improvements
 
