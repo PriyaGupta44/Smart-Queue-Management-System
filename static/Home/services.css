@@ -6,6 +6,15 @@
     background: #ffffff;
 }
 
+.section-tag {
+    color: blue;
+    font-size: 30px;
+    font-weight: bold;
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
 .services-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
