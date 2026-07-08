@@ -1,76 +1,557 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Queue Management System</title>
 
-    <link rel="stylesheet" href="static/index.css">
+    <title>QueueMS | Smart Queue Management System</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="static/Home/index.css">
+    <link rel="stylesheet" href="static/Home/style.css">
+    <link rel="stylesheet" href="static/Home/navbar.css">
+    <link rel="stylesheet" href="static/Home/hero.css">
+    <link rel="stylesheet" href="static/Home/features.css">
+    <link rel="stylesheet" href="static/Home/services.css">
+    <link rel="stylesheet" href="static/Home/extra.css">
+    <link rel="stylesheet" href="static/Home/responsive.css">
 </head>
 
 <body>
 
-    <header>
-        <nav>
-            <h2>QueueMS</h2>
+<!-- ================= NAVBAR ================= -->
 
-            <ul>
-                <li><a href="/" class="active">Home</a></li>
-                <li><a href="/about">About</a></li>
-            </ul>
-        </nav>
-    </header>
+<header>
 
-    <section class="hero">
+<nav class="navbar">
 
-        <div class="hero-text">
+<div class="logo">
 
-            <h1>Smart Queue Management System</h1>
+<i class="fa-solid fa-ticket"></i>
 
-            <p>
-                Manage queues digitally, reduce waiting time,
-                and improve customer experience.
-            </p>
+<h2>QueueMS</h2>
 
-            <div class="buttons">
-                <a href="#" class="primary">Join Queue</a>
-                <a href="#" class="secondary">Admin Login</a>
-            </div>
+</div>
 
-        </div>
+<ul class="nav-links">
 
-    </section>
+<li><a href="index.html" class="active">Home</a></li>
 
-    <section class="features">
+<li><a href="about.html">About</a></li>
 
-        <h2>Features</h2>
+<li><a href="#features">Features</a></li>
 
-        <div class="cards">
+<li><a href="#faq">FAQ</a></li>
 
-            <div class="card">
-                <h3>Digital Tokens</h3>
-                <p>Generate queue numbers instantly.</p>
-            </div>
+<li><a href="#">Login</a></li>
 
-            <div class="card">
-                <h3>Live Queue</h3>
-                <p>Monitor current queue status in real-time.</p>
-            </div>
+</ul>
 
-            <div class="card">
-                <h3>Fast Service</h3>
-                <p>Reduce congestion and waiting time.</p>
-            </div>
+<a href="#" class="join-btn">
+Join Queue
+</a>
 
-        </div>
+</nav>
 
-    </section>
+</header>
 
-    <footer>
-        <p>© 2026 Queue Management System</p>
-    </footer>
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+<div class="hero-content">
+
+<div class="hero-text">
+
+<span class="tag">
+🚀 Smart Digital Queue Solution
+</span>
+
+<h1>
+
+Manage Queues
+<span>Smarter</span>,
+Not Harder.
+
+</h1>
+
+<p>
+
+QueueMS helps hospitals, colleges, banks,
+government offices and service centers
+manage customers efficiently with
+real-time queue tracking.
+
+</p>
+
+<div class="hero-buttons">
+
+<a href="#" class="primary-btn">
+Join Queue
+</a>
+
+<a href="#features" class="secondary-btn">
+Learn More
+</a>
+
+</div>
+
+</div>
+
+<div class="hero-image">
+
+<img src="assets/images/hero.svg"
+alt="Queue Illustration">
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= FEATURES ================= -->
+
+<section class="features" id="features">
+
+<h2 class="section-title">
+
+Why Choose QueueMS?
+
+</h2>
+
+<p class="section-subtitle">
+
+Everything you need to manage queues efficiently.
+
+</p>
+
+<div class="feature-container">
+
+<div class="feature-card">
+
+<i class="fa-solid fa-ticket"></i>
+
+<h3>Digital Token</h3>
+
+<p>
+
+Generate queue numbers instantly without paper.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-display"></i>
+
+<h3>Live Queue</h3>
+
+<p>
+
+Track queue status in real-time from anywhere.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-bell"></i>
+
+<h3>Notifications</h3>
+
+<p>
+
+Receive alerts when your turn is approaching.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<i class="fa-solid fa-chart-line"></i>
+
+<h3>Analytics</h3>
+
+<p>
+
+View reports and improve service efficiency.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= STATISTICS ================= -->
+
+<section class="stats">
+
+<div class="stat-card">
+
+<h2>10K+</h2>
+
+<p>Users Served</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>150+</h2>
+
+<p>Organizations</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>70%</h2>
+
+<p>Less Waiting Time</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2>99%</h2>
+
+<p>Customer Satisfaction</p>
+
+</div>
+
+</section>
+
+<!-- ================= QUEUE TYPES ================= -->
+
+<section class="services">
+
+<h2 class="section-title">
+
+Perfect For Every Organization
+
+</h2>
+
+<div class="service-grid">
+
+<div class="service-box">
+
+<i class="fa-solid fa-hospital"></i>
+
+<h3>Hospitals</h3>
+
+</div>
+
+<div class="service-box">
+
+<i class="fa-solid fa-building-columns"></i>
+
+<h3>Banks</h3>
+
+</div>
+
+<div class="service-box">
+
+<i class="fa-solid fa-graduation-cap"></i>
+
+<h3>Colleges</h3>
+
+</div>
+
+<div class="service-box">
+
+<i class="fa-solid fa-landmark"></i>
+
+<h3>Government Offices</h3>
+
+</div>
+
+<div class="service-box">
+
+<i class="fa-solid fa-utensils"></i>
+
+<h3>Restaurants</h3>
+
+</div>
+
+<div class="service-box">
+
+<i class="fa-solid fa-briefcase"></i>
+
+<h3>Service Centers</h3>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= HOW IT WORKS ================= -->
+
+<section class="timeline">
+
+<h2 class="section-title">
+
+How It Works
+
+</h2>
+
+<div class="timeline-container">
+
+<div class="step">
+
+<span>1</span>
+
+<h3>Register</h3>
+
+<p>Create your queue request.</p>
+
+</div>
+
+<div class="step">
+
+<span>2</span>
+
+<h3>Get Token</h3>
+
+<p>Receive a digital queue number.</p>
+
+</div>
+
+<div class="step">
+
+<span>3</span>
+
+<h3>Wait</h3>
+
+<p>Track your live position.</p>
+
+</div>
+
+<div class="step">
+
+<span>4</span>
+
+<h3>Notification</h3>
+
+<p>Get notified before your turn.</p>
+
+</div>
+
+<div class="step">
+
+<span>5</span>
+
+<h3>Service</h3>
+
+<p>Complete your visit smoothly.</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= TESTIMONIALS ================= -->
+
+<section class="testimonials">
+
+<h2 class="section-title">
+
+What People Say
+
+</h2>
+
+<div class="testimonial-container">
+
+<div class="testimonial">
+
+<p>
+
+"QueueMS reduced our waiting time by more than 60%.
+The experience has been fantastic."
+
+</p>
+
+<h4>Hospital Administrator</h4>
+
+</div>
+
+<div class="testimonial">
+
+<p>
+
+"The dashboard is simple and easy to manage.
+Highly recommended."
+
+</p>
+
+<h4>Bank Manager</h4>
+
+</div>
+
+<div class="testimonial">
+
+<p>
+
+"Our students no longer need to stand in long queues."
+
+</p>
+
+<h4>College Staff</h4>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ================= FAQ ================= -->
+
+<section class="faq" id="faq">
+
+<h2 class="section-title">
+
+Frequently Asked Questions
+
+</h2>
+
+<div class="faq-item">
+
+<h3>What is QueueMS?</h3>
+
+<p>
+
+A smart digital queue management platform for organizations.
+
+</p>
+
+</div>
+
+<div class="faq-item">
+
+<h3>Can multiple queues be managed?</h3>
+
+<p>
+
+Yes. QueueMS supports multiple departments and services.
+
+</p>
+
+</div>
+
+<div class="faq-item">
+
+<h3>Is it mobile friendly?</h3>
+
+<p>
+
+Absolutely. Customers can join and monitor queues from any device.
+
+</p>
+
+</div>
+
+</section>
+
+<!-- ================= CALL TO ACTION ================= -->
+
+<section class="cta">
+
+<h2>
+
+Ready to Modernize Your Queue?
+
+</h2>
+
+<p>
+
+Join thousands of organizations using QueueMS.
+
+</p>
+
+<a href="#" class="primary-btn">
+
+Get Started
+
+</a>
+
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+<div class="footer-container">
+
+<div>
+
+<h2>QueueMS</h2>
+
+<p>
+
+Making queue management smarter,
+faster and easier.
+
+</p>
+
+</div>
+
+<div>
+
+<h3>Quick Links</h3>
+
+<ul>
+
+<li><a href="#">Home</a></li>
+
+<li><a href="#">About</a></li>
+
+<li><a href="#">Features</a></li>
+
+<li><a href="#">FAQ</a></li>
+
+</ul>
+
+</div>
+
+<div>
+
+<h3>Follow Us</h3>
+
+<div class="social">
+
+<a href="#"><i class="fab fa-github"></i></a>
+
+<a href="#"><i class="fab fa-linkedin"></i></a>
+
+<a href="#"><i class="fab fa-twitter"></i></a>
+
+</div>
+
+</div>
+
+</div>
+
+<hr>
+
+<p class="copyright">
+
+© 2026 QueueMS. All Rights Reserved.
+
+</p>
+
+</footer>
 
 </body>
-
 </html>
