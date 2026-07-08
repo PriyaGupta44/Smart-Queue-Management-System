@@ -1,0 +1,149 @@
+/* ===========================
+   FEATURES SECTION
+=========================== */
+
+.features{
+    padding:100px 8%;
+    background:#0d1117;
+}
+
+.features .section-title{
+    text-align:center;
+    margin-bottom:70px;
+}
+
+.features .section-title h2{
+    font-size:2.8rem;
+    color:#ffffff;
+    margin-bottom:15px;
+}
+
+.features .section-title p{
+    color:#9ca3af;
+    font-size:1.1rem;
+    max-width:650px;
+    margin:auto;
+    line-height:1.7;
+}
+
+/* Grid */
+
+.features-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:30px;
+}
+
+/* Card */
+
+.feature-card{
+    background:#161b22;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:18px;
+    padding:40px 30px;
+    text-align:center;
+    transition:.4s;
+    position:relative;
+    overflow:hidden;
+}
+
+/* Glow Border */
+
+.feature-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:18px;
+    padding:1px;
+    background:linear-gradient(
+        135deg,
+        #3b82f6,
+        transparent,
+        #00d4ff
+    );
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+    opacity:0;
+    transition:.4s;
+}
+
+.feature-card:hover::before{
+    opacity:1;
+}
+
+.feature-card:hover{
+    transform:translateY(-12px);
+    box-shadow:
+        0 15px 35px rgba(0,212,255,.15);
+}
+
+/* Icon */
+
+.feature-icon{
+    width:75px;
+    height:75px;
+    margin:auto;
+    border-radius:50%;
+    background:linear-gradient(135deg,#3b82f6,#00d4ff);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:25px;
+    transition:.4s;
+}
+
+.feature-icon i{
+    color:white;
+    font-size:30px;
+}
+
+.feature-card:hover .feature-icon{
+    transform:rotate(8deg) scale(1.1);
+}
+
+/* Title */
+
+.feature-card h3{
+    color:#ffffff;
+    margin-bottom:15px;
+    font-size:1.4rem;
+}
+
+/* Description */
+
+.feature-card p{
+    color:#9ca3af;
+    line-height:1.8;
+    font-size:.97rem;
+}
+
+/* Hover Text */
+
+.feature-card:hover h3{
+    color:#3b82f6;
+}
+
+.feature-card:hover p{
+    color:#d1d5db;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+    .features{
+        padding:80px 6%;
+    }
+
+    .features .section-title h2{
+        font-size:2.2rem;
+    }
+
+    .feature-card{
+        padding:35px 25px;
+    }
+
+}

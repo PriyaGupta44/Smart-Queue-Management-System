@@ -1,0 +1,582 @@
+/* =====================================================
+   Queue Management System
+   Global Styles
+   Author: Priya Gupta
+===================================================== */
+
+/* ===========================
+   Google Font
+=========================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+
+/* ===========================
+   CSS Variables
+=========================== */
+
+:root{
+
+    --primary:#2563eb;
+    --primary-dark:#1d4ed8;
+
+    --secondary:#10b981;
+
+    --dark:#111827;
+
+    --text:#374151;
+
+    --gray:#6b7280;
+
+    --light:#f8fafc;
+
+    --white:#ffffff;
+
+    --border:#e5e7eb;
+
+    --shadow:
+        0 8px 30px rgba(0,0,0,.08);
+
+    --radius:16px;
+
+}
+
+
+/* ===========================
+   Reset
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
+    background:var(--light);
+
+    color:var(--text);
+
+    line-height:1.6;
+
+}
+
+
+img{
+    width:100%;
+    display:block;
+}
+
+a{
+    text-decoration:none;
+}
+
+ul{
+    list-style:none;
+}
+
+section{
+    padding:90px 0;
+}
+
+.container{
+
+    width:90%;
+
+    max-width:1200px;
+
+    margin:auto;
+
+}
+
+
+/* ===========================
+   Headings
+=========================== */
+
+.section-title{
+
+    text-align:center;
+
+    margin-bottom:60px;
+
+}
+
+.section-title h2{
+
+    font-size:2.3rem;
+
+    color:var(--dark);
+
+    margin-bottom:10px;
+
+}
+
+.section-title p{
+
+    color:var(--gray);
+
+}
+
+
+/* ===========================
+   Buttons
+=========================== */
+
+.btn{
+
+    display:inline-block;
+
+    padding:14px 30px;
+
+    border-radius:50px;
+
+    transition:.3s;
+
+    font-weight:600;
+
+}
+
+.btn-primary{
+
+    background:var(--primary);
+
+    color:white;
+
+}
+
+.btn-primary:hover{
+
+    background:var(--primary-dark);
+
+    transform:translateY(-3px);
+
+}
+
+.btn-outline{
+
+    border:2px solid var(--primary);
+
+    color:var(--primary);
+
+}
+
+.btn-outline:hover{
+
+    background:var(--primary);
+
+    color:white;
+
+}
+
+
+/* ===========================
+   Hero
+=========================== */
+
+.hero{
+
+    padding-top:130px;
+
+    background:white;
+
+}
+
+.hero-content{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:60px;
+
+    align-items:center;
+
+}
+
+.hero-text h1{
+
+    font-size:3.2rem;
+
+    line-height:1.2;
+
+    color:var(--dark);
+
+}
+
+.hero-text span{
+
+    color:var(--primary);
+
+}
+
+.hero-text p{
+
+    margin:25px 0;
+
+    color:var(--gray);
+
+}
+
+.hero-buttons{
+
+    display:flex;
+
+    gap:18px;
+
+}
+
+.hero-image img{
+
+    border-radius:20px;
+
+    box-shadow:var(--shadow);
+
+}
+
+
+/* ===========================
+   Statistics
+=========================== */
+
+.stats{
+
+    background:var(--primary);
+
+}
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:30px;
+
+}
+
+.stat-card{
+
+    color:white;
+
+    text-align:center;
+
+}
+
+.stat-card h2{
+
+    font-size:2.4rem;
+
+}
+
+.stat-card p{
+
+    opacity:.9;
+
+}
+
+
+/* ===========================
+   Features
+=========================== */
+
+.features-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:30px;
+
+}
+
+.feature-card{
+
+    background:white;
+
+    padding:35px;
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+
+    transition:.3s;
+
+}
+
+.feature-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.feature-icon{
+
+    width:70px;
+
+    height:70px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:#eff6ff;
+
+    color:var(--primary);
+
+    font-size:28px;
+
+    margin-bottom:20px;
+
+}
+
+.feature-card h3{
+
+    margin-bottom:15px;
+
+    color:var(--dark);
+
+}
+
+
+/* ===========================
+   How It Works
+=========================== */
+
+.steps{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:35px;
+
+}
+
+.step{
+
+    text-align:center;
+
+}
+
+.step-number{
+
+    width:65px;
+
+    height:65px;
+
+    margin:auto;
+
+    margin-bottom:20px;
+
+    border-radius:50%;
+
+    background:var(--primary);
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:24px;
+
+    font-weight:bold;
+
+}
+
+.step h3{
+
+    margin-bottom:15px;
+
+}
+
+
+/* ===========================
+   CTA
+=========================== */
+
+.cta{
+
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
+
+    color:white;
+
+    text-align:center;
+
+}
+
+.cta h2{
+
+    font-size:2.5rem;
+
+}
+
+.cta p{
+
+    margin:20px 0 30px;
+
+}
+
+
+/* ===========================
+   Footer
+=========================== */
+
+footer{
+
+    background:#111827;
+
+    color:white;
+
+    padding:60px 0 30px;
+
+}
+
+.footer-grid{
+
+    display:grid;
+
+    grid-template-columns:2fr 1fr 1fr 1fr;
+
+    gap:40px;
+
+}
+
+.footer-grid h3{
+
+    margin-bottom:20px;
+
+}
+
+.footer-grid a{
+
+    color:#d1d5db;
+
+}
+
+.footer-grid li{
+
+    margin-bottom:12px;
+
+}
+
+.footer-bottom{
+
+    text-align:center;
+
+    border-top:1px solid rgba(255,255,255,.1);
+
+    margin-top:40px;
+
+    padding-top:20px;
+
+    color:#9ca3af;
+
+}
+
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media(max-width:992px){
+
+.hero-content{
+
+grid-template-columns:1fr;
+
+text-align:center;
+
+}
+
+.hero-buttons{
+
+justify-content:center;
+
+}
+
+.features-grid{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+.steps{
+
+grid-template-columns:1fr;
+
+}
+
+.stats-grid{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+.footer-grid{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+@media(max-width:768px){
+
+.section-title h2{
+
+font-size:2rem;
+
+}
+
+.hero-text h1{
+
+font-size:2.3rem;
+
+}
+
+.features-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.stats-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.footer-grid{
+
+grid-template-columns:1fr;
+
+text-align:center;
+
+}
+
+.hero-buttons{
+
+flex-direction:column;
+
+}
+
+}

@@ -1,118 +1,380 @@
+/* ============================================
+   Queue Management System
+   Main Stylesheet (index.css)
+============================================ */
+
+/* ===============================
+   Google Fonts
+================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* ===============================
+   Import Component Styles
+================================= */
+
+@import url("navbar.css");
+@import url("hero.css");
+@import url("features.css");
+@import url("services.css");
+
+/* Future CSS Files */
+
+/*
+@import url("about.css");
+@import url("workflow.css");
+@import url("testimonials.css");
+@import url("pricing.css");
+@import url("faq.css");
+@import url("contact.css");
+@import url("footer.css");
+*/
+
+
+/* ===============================
+   CSS Variables
+================================= */
+
+:root{
+
+    /* Colors */
+
+    --primary:#2563eb;
+    --primary-dark:#1d4ed8;
+    --secondary:#06b6d4;
+
+    --success:#10b981;
+    --warning:#f59e0b;
+    --danger:#ef4444;
+
+    --dark:#0f172a;
+    --dark-light:#1e293b;
+
+    --text:#334155;
+    --text-light:#64748b;
+
+    --white:#ffffff;
+    --light:#f8fafc;
+    --border:#e2e8f0;
+
+    /* Shadows */
+
+    --shadow-sm:0 2px 8px rgba(0,0,0,.06);
+    --shadow-md:0 8px 20px rgba(0,0,0,.08);
+    --shadow-lg:0 20px 40px rgba(0,0,0,.12);
+
+    /* Radius */
+
+    --radius-sm:8px;
+    --radius:12px;
+    --radius-lg:18px;
+    --radius-xl:28px;
+
+    /* Transition */
+
+    --transition:.3s ease;
+
+    /* Width */
+
+    --container:1200px;
+
+}
+
+/* ===============================
+   Reset
+================================= */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
-    background:#f5f7fb;
-    color:#333;
+
+    font-family:'Poppins',sans-serif;
+    background:var(--white);
+    color:var(--text);
+    overflow-x:hidden;
+    line-height:1.6;
+
 }
 
-header{
-    background:#0f172a;
-    padding:20px 60px;
+img{
+    width:100%;
+    display:block;
 }
 
-nav{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+a{
+    text-decoration:none;
+    color:inherit;
 }
 
-nav h2{
-    color:white;
-}
-
-nav ul{
-    display:flex;
+ul{
     list-style:none;
 }
 
-nav ul li{
-    margin-left:25px;
+button,
+input,
+textarea{
+    font-family:inherit;
+    outline:none;
+    border:none;
 }
 
-nav a{
-    text-decoration:none;
-    color:white;
+/* ===============================
+   Common Container
+================================= */
+
+.container{
+
+    width:90%;
+    max-width:var(--container);
+    margin:auto;
+
 }
 
-.active{
-    color:#38bdf8;
+/* ===============================
+   Sections
+================================= */
+
+section{
+
+    padding:90px 0;
+
 }
 
-.hero{
-    height:80vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+/* ===============================
+   Section Title
+================================= */
+
+.section-header{
+
     text-align:center;
-    padding:40px;
+    margin-bottom:60px;
+
 }
 
-.hero h1{
-    font-size:50px;
-    margin-bottom:20px;
+.section-header span{
+
+    color:var(--primary);
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:1px;
+
 }
 
-.hero p{
-    font-size:20px;
+.section-header h2{
+
+    font-size:2.5rem;
+    color:var(--dark);
+    margin:15px 0;
+
+}
+
+.section-header p{
+
     max-width:650px;
     margin:auto;
-    margin-bottom:35px;
+    color:var(--text-light);
+
 }
 
-.buttons a{
-    text-decoration:none;
-    padding:14px 28px;
-    border-radius:8px;
-    margin:10px;
-}
+/* ===============================
+   Buttons
+================================= */
 
-.primary{
-    background:#2563eb;
-    color:white;
-}
+.btn{
 
-.secondary{
-    border:2px solid #2563eb;
-    color:#2563eb;
-}
-
-.features{
-    padding:80px;
-    text-align:center;
-}
-
-.features h2{
-    margin-bottom:50px;
-}
-
-.cards{
-    display:flex;
+    display:inline-flex;
+    align-items:center;
     justify-content:center;
-    gap:30px;
-    flex-wrap:wrap;
+
+    padding:14px 32px;
+
+    border-radius:50px;
+
+    cursor:pointer;
+
+    transition:var(--transition);
+
+    font-weight:600;
+
 }
+
+.btn-primary{
+
+    background:var(--primary);
+    color:white;
+
+}
+
+.btn-primary:hover{
+
+    background:var(--primary-dark);
+    transform:translateY(-3px);
+
+}
+
+.btn-outline{
+
+    border:2px solid var(--primary);
+    color:var(--primary);
+
+}
+
+.btn-outline:hover{
+
+    background:var(--primary);
+    color:white;
+
+}
+
+/* ===============================
+   Cards
+================================= */
 
 .card{
-    width:300px;
+
     background:white;
-    padding:30px;
-    border-radius:10px;
-    box-shadow:0 5px 20px rgba(0,0,0,.1);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-sm);
+    transition:var(--transition);
+
 }
 
-.card h3{
-    margin-bottom:15px;
+.card:hover{
+
+    transform:translateY(-8px);
+    box-shadow:var(--shadow-lg);
+
 }
 
-footer{
-    background:#0f172a;
-    color:white;
-    text-align:center;
-    padding:20px;
-    margin-top:80px;
+/* ===============================
+   Grid
+================================= */
+
+.grid{
+
+    display:grid;
+    gap:30px;
+
+}
+
+/* ===============================
+   Scrollbar
+================================= */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:var(--primary);
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#edf2f7;
+
+}
+
+/* ===============================
+   Animations
+================================= */
+
+@keyframes fadeUp{
+
+    from{
+
+        opacity:0;
+        transform:translateY(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:translateY(0);
+
+    }
+
+}
+
+.fade-up{
+
+    animation:fadeUp .8s ease forwards;
+
+}
+
+/* ===============================
+   Responsive
+================================= */
+
+@media(max-width:992px){
+
+.section-header h2{
+
+    font-size:2rem;
+
+}
+
+section{
+
+    padding:70px 0;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.container{
+
+    width:92%;
+
+}
+
+.section-header{
+
+    margin-bottom:45px;
+
+}
+
+.section-header h2{
+
+    font-size:1.8rem;
+
+}
+
+.btn{
+
+    width:100%;
+
+}
+
+}
+
+@media(max-width:576px){
+
+.section-header h2{
+
+    font-size:1.6rem;
+
+}
+
+.section-header p{
+
+    font-size:.95rem;
+
+}
+
 }

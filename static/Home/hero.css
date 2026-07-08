@@ -1,0 +1,244 @@
+/* ==========================================
+   HERO SECTION
+========================================== */
+
+.hero {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 8% 80px;
+    background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 50%, #ffffff 100%);
+    overflow: hidden;
+}
+
+.hero .container {
+    max-width: 1300px;
+    margin: auto;
+    width: 100%;
+}
+
+/* ===========================
+   Badge
+=========================== */
+
+.hero-badge {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.hero-badge span {
+    display: inline-block;
+    padding: 10px 24px;
+    border-radius: 50px;
+    background: rgba(37, 99, 235, 0.1);
+    color: #2563eb;
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* ===========================
+   Grid Layout
+=========================== */
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 70px;
+}
+
+/* ===========================
+   Content
+=========================== */
+
+.hero-content h1 {
+    font-size: 4rem;
+    line-height: 1.15;
+    font-weight: 800;
+    color: #1f2937;
+    margin-bottom: 25px;
+}
+
+.hero-content h1 span {
+    color: #2563eb;
+}
+
+.hero-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #6b7280;
+    max-width: 550px;
+    margin-bottom: 40px;
+}
+
+/* ===========================
+   Buttons
+=========================== */
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 34px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    color: #fff;
+    box-shadow: 0 12px 25px rgba(37, 99, 235, 0.25);
+}
+
+.btn-primary:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 35px rgba(37, 99, 235, 0.35);
+}
+
+.btn-outline {
+    border: 2px solid #2563eb;
+    color: #2563eb;
+    background: transparent;
+}
+
+.btn-outline:hover {
+    background: #2563eb;
+    color: #fff;
+    transform: translateY(-4px);
+}
+
+/* ===========================
+   Trust Text
+=========================== */
+
+.hero-trust {
+    font-size: 0.95rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* ===========================
+   Image
+=========================== */
+
+.hero-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 520px;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.12);
+    animation: float 5s ease-in-out infinite;
+}
+
+/* Floating Animation */
+
+@keyframes float {
+
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width: 992px) {
+
+    .hero {
+        padding: 100px 6% 70px;
+    }
+
+    .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 50px;
+    }
+
+    .hero-content p {
+        margin: 0 auto 35px;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .hero-trust {
+        text-align: center;
+    }
+
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .hero-badge {
+        margin-bottom: 40px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 220px;
+    }
+
+    .hero-image img {
+        max-width: 380px;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .hero {
+        padding: 90px 5% 60px;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-badge span {
+        font-size: 0.85rem;
+        padding: 8px 18px;
+    }
+
+}
