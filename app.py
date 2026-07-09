@@ -22,4 +22,8 @@ def login():
 def register():
     return render_template('register.html')
 
+@app.route("/contact")
+def contact():
+    return render_template('contact.html')
+
 app.run()
