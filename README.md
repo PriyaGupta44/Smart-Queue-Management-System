@@ -223,7 +223,7 @@ Continue building the frontend of the Queue Management System by creating reusab
 * ⏳ Flask Backend
 * ⏳ MySQL Database Integration
 
-## 📅 Day  – Frontend UI Development completed
+## 📅 Day 4  – Frontend UI Development completed
 
 ### 📂 Progress
 
@@ -238,6 +238,20 @@ Continue building the frontend of the Queue Management System by creating reusab
 * ⏳ Flask Backend
 * ⏳ MySQL Database Integration
 
+## 📅 Day 5  – Learning Flask backend
+
+### 📂 Progress
+
+* ✅ Navigation Bar
+* ✅ Hero Section
+* ✅ Features Section
+* ✅ Services Section
+* ✅ About Section
+* ✅ Contact Section
+* ✅ Footer
+* ⏳ JavaScript Functionality             (......Will do it later.....)
+* ⏳ Flask Backend                        (......Learning.............)
+* ⏳ MySQL Database Integration
 
 ## 🚀 Future Improvements
 
