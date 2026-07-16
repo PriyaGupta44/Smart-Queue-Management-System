@@ -1,0 +1,224 @@
+/* ===========================
+   Footer Section
+=========================== */
+
+
+.footer {
+
+    background:#081b33;
+
+    color:white;
+
+    padding:70px 8% 20px;
+
+}
+
+
+
+
+.footer-container {
+
+
+    display:grid;
+
+    grid-template-columns:
+
+    2fr 1fr 1.5fr 1.5fr;
+
+    gap:40px;
+
+
+}
+
+
+
+
+
+/* Brand */
+
+
+.footer-brand h2 {
+
+
+    font-size:32px;
+
+    margin-bottom:20px;
+
+
+}
+
+
+
+.footer-brand h2 span {
+
+
+    color:#00a8ff;
+
+
+}
+
+
+
+.footer-brand p {
+
+
+    color:#cbd5e1;
+
+    line-height:1.7;
+
+    max-width:350px;
+
+
+}
+
+
+
+
+
+/* Footer Headings */
+
+
+.footer h3 {
+
+
+    font-size:20px;
+
+    margin-bottom:20px;
+
+}
+
+
+
+
+/* Links */
+
+
+.footer-links ul {
+
+
+    list-style:none;
+
+    padding:0;
+
+
+}
+
+
+
+.footer-links li {
+
+
+    margin-bottom:12px;
+
+    color:#cbd5e1;
+
+
+}
+
+
+
+.footer-links a {
+
+
+    text-decoration:none;
+
+    color:#cbd5e1;
+
+    transition:.3s;
+
+
+}
+
+
+
+.footer-links a:hover {
+
+
+    color:#00a8ff;
+
+
+}
+
+
+
+
+
+/* Contact */
+
+
+.footer-contact p {
+
+
+    color:#cbd5e1;
+
+    margin-bottom:12px;
+
+
+}
+
+
+
+
+/* Bottom */
+
+
+.footer-bottom {
+
+
+    margin-top:50px;
+
+    padding-top:20px;
+
+    border-top:1px solid rgba(255,255,255,0.15);
+
+    text-align:center;
+
+
+}
+
+
+
+.footer-bottom p {
+
+
+    color:#94a3b8;
+
+    font-size:14px;
+
+
+}
+
+
+
+
+
+/* Responsive */
+
+
+@media(max-width:900px){
+
+
+    .footer-container{
+
+
+        grid-template-columns:1fr 1fr;
+
+    }
+
+
+}
+
+
+
+@media(max-width:600px){
+
+
+    .footer-container{
+
+
+        grid-template-columns:1fr;
+
+    }
+
+
+}
