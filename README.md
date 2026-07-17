@@ -250,7 +250,7 @@ Continue building the frontend of the Queue Management System by creating reusab
 * ✅ Contact Section
 * ✅ Footer
 * ⏳ JavaScript Functionality             (......Will do it later.....)
-* ⏳ Flask Backend                        (......Learning.............)
+* ⏳ Flask Backend                      (..............is in process..........)
 * ⏳ MySQL Database Integration
 
 ## 📅 Day 6  - Changing project structure into a professional structures
