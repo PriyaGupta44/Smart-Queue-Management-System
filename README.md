@@ -253,6 +253,10 @@ Continue building the frontend of the Queue Management System by creating reusab
 * ⏳ Flask Backend                        (......Learning.............)
 * ⏳ MySQL Database Integration
 
+## 📅 Day 6  - Changing project structure into a professional structures
+
+## Project structure loading...
+
 ## 🚀 Future Improvements
 
 * QR Code Queue System
