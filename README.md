@@ -257,6 +257,9 @@ Continue building the frontend of the Queue Management System by creating reusab
 
 ## Project structure loading...
 
+
+## Day 7 - Disturbed because of internet problem and busys days
+
 ## 🚀 Future Improvements
 
 * QR Code Queue System
