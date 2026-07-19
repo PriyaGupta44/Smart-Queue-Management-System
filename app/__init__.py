@@ -34,4 +34,41 @@ def create_app(config_name="default"):
     # --- models must be imported so Flask-Migrate/db.create_all can see them ---
     from app.models import student, queue, payment  # noqa: F401
 
+    register_cli(app)
+
     return app
+
+
+def register_cli(app):
+    """CLI commands, kept separate from HTTP routes on purpose.
+
+    Admin accounts must never be created through the public /register
+    form (that would let anyone grant themselves admin access). This
+    command is the only supported way to create one:
+
+        flask --app run.py seed-admin admin@college.edu "Admin Name"
+    """
+    import click
+
+    @app.cli.command("seed-admin")
+    @click.argument("email")
+    @click.argument("full_name")
+    @click.password_option()
+    def seed_admin(email, full_name, password):
+        from app.extensions import db
+        from app.models.student import Student
+
+        email = email.lower()
+        existing = Student.query.filter_by(email=email).first()
+        if existing:
+            existing.role = "admin"
+            existing.set_password(password)
+            db.session.commit()
+            click.echo(f"Existing user {email} promoted to admin.")
+            return
+
+        admin = Student(full_name=full_name, email=email, role="admin")
+        admin.set_password(password)
+        db.session.add(admin)
+        db.session.commit()
+        click.echo(f"Admin account created for {email}.")
