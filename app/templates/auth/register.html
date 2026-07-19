@@ -15,9 +15,9 @@
 
     <!-- CSS -->
 
-    <link rel="stylesheet" href="static/CSS/style.css">
-    <link rel="stylesheet" href="static/CSS/navbar.css">
-    <link rel="stylesheet" href="static/CSS/register.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
 
 </head>
 
@@ -37,13 +37,13 @@
 
                 <ul class="nav-links">
 
-                    <li><a href="/">Home</a></li>
+                    <li><a href="{{ url_for('main.home') }}">Home</a></li>
 
-                    <li><a href="/about">About</a></li>
+                    <li><a href="{{ url_for('main.about') }}">About</a></li>
 
-                    <li><a href="/services">Services</a></li>
+                    <li><a href="{{ url_for('main.services') }}">Services</a></li>
 
-                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
 
                 </ul>
 
@@ -51,11 +51,11 @@
 
             <div class="nav-buttons">
 
-                <a href="/login" class="btn btn-outline">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline">
                     Login
                 </a>
 
-                <a href="/register" class="btn btn-primary">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
                     Register
                 </a>
 
@@ -145,7 +145,7 @@ Manage Services Digitally
 
 
 
-<img src="static/image/Queue.jpg">
+<img src="{{ url_for('static', filename='images/Queue.jpg') }}">
 
 
 </div>
@@ -175,163 +175,76 @@ Join QueueFlow today
 
 
 
-<form>
+<form method="POST" action="{{ url_for('auth.register') }}">
 
+{{ form.hidden_tag() }}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <p class="flash flash-{{ category }}">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 
 <div class="input-box">
 
 <i class="fa-solid fa-user"></i>
 
-<input 
-type="text"
-placeholder="Full Name"
-required>
+{{ form.full_name(placeholder="Full Name") }}
 
 </div>
-
+{% for error in form.full_name.errors %}<p class="flash flash-danger">{{ error }}</p>{% endfor %}
 
 
 <div class="input-box">
 
 <i class="fa-solid fa-envelope"></i>
 
-<input 
-type="email"
-placeholder="Email Address"
-required>
+{{ form.email(placeholder="Email Address") }}
 
 </div>
-
-
-
-
-<div class="input-box">
-
-<i class="fa-solid fa-phone"></i>
-
-<input 
-type="tel"
-placeholder="Phone Number"
-required>
-
-</div>
-
-
-
+{% for error in form.email.errors %}<p class="flash flash-danger">{{ error }}</p>{% endfor %}
 
 
 <div class="input-box">
 
 <i class="fa-solid fa-lock"></i>
 
-<input 
-type="password"
-placeholder="Password"
-required>
+{{ form.password(placeholder="Password") }}
 
 </div>
-
-
+{% for error in form.password.errors %}<p class="flash flash-danger">{{ error }}</p>{% endfor %}
 
 
 <div class="input-box">
 
 <i class="fa-solid fa-lock"></i>
 
-<input 
-type="password"
-placeholder="Confirm Password"
-required>
+{{ form.confirm_password(placeholder="Confirm Password") }}
 
 </div>
+{% for error in form.confirm_password.errors %}<p class="flash flash-danger">{{ error }}</p>{% endfor %}
 
 
-
-
-
-<!-- ROLE SELECTION -->
-
-
-<div class="role-section">
-
-
-<label>
-
-Register As
-
-</label>
-
-
-
-<div class="roles">
-
-
-<label>
-
-<input 
-type="radio"
-name="role"
-value="user"
-checked>
-
-
-User
-
-</label>
-
-
-
-
-<label>
-
-<input 
-type="radio"
-name="role"
-value="admin">
-
-
-Administrator
-
-</label>
-
-
-
-</div>
-
-
-</div>
-
-
-
-
+<!-- NOTE: there is intentionally no "register as Admin" option here.
+     Admin accounts are never self-service — see the seed_admin CLI
+     command in app/admin/__init__.py. Letting a public sign-up form
+     grant admin/staff privileges is a serious access-control bug. -->
 
 <div class="terms">
 
-
 <label>
 
-
-<input type="checkbox"
-required>
-
+<input type="checkbox" required>
 
 I agree to Terms & Conditions
 
-
 </label>
-
 
 </div>
 
-
-
-
-
-<button type="submit">
-
-Create Account
-
-</button>
+{{ form.submit(class="btn") }}
 
 
 
@@ -384,7 +297,7 @@ GitHub
 Already have an account?
 
 
-<a href="/login">
+<a href="{{ url_for('auth.login') }}">
 
 Sign In
 

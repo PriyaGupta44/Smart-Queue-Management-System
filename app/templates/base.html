@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Queue Management System{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="{{ url_for('main.home') }}" class="logo">Queue<span>Flow</span></a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('main.home') }}">Home</a></li>
+                    <li><a href="{{ url_for('main.about') }}">About</a></li>
+                    <li><a href="{{ url_for('main.services') }}">Services</a></li>
+                    <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.is_admin %}
+                            <li><a href="{{ url_for('admin.dashboard') }}">Admin</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('student.dashboard') }}">Dashboard</a></li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+            </nav>
+            <div class="nav-buttons">
+                {% if current_user.is_authenticated %}
+                    <span class="welcome-name">Hi, {{ current_user.full_name.split(' ')[0] }}</span>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-outline">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Login</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="page-wrap">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-stack container">
+                    {% for category, message in messages %}
+                        <p class="flash flash-{{ category }}">{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include "footer.html" ignore missing %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

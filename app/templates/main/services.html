@@ -7,10 +7,10 @@
 
     <title>Services | Queue Management System</title>
 
-    <link rel="stylesheet" href="static/CSS/style.css">
-    <link rel="stylesheet" href="static/CSS/navbar.css">
-    <link rel="stylesheet" href="static/CSS/services.css">
-    <link rel="stylesheet" href="static/CSS/footer.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/services.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,13 +37,13 @@
 
                 <ul class="nav-links">
 
-                    <li><a href="/" >Home</a></li>
+                    <li><a href="{{ url_for('main.home') }}">Home</a></li>
 
-                    <li><a href="/about">About</a></li>
+                    <li><a href="{{ url_for('main.about') }}">About</a></li>
 
-                    <li><a href="/services" class="active">Services</a></li>
+                    <li><a href="{{ url_for('main.services') }}" class="active">Services</a></li>
 
-                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
 
                 </ul>
 
@@ -51,11 +51,11 @@
 
             <div class="nav-buttons">
 
-                <a href="/login" class="btn btn-outline">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline">
                     Login
                 </a>
 
-                <a href="/register" class="btn btn-primary">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
                     Register
                 </a>
 
@@ -187,7 +187,7 @@
 
                 </p>
 
-                <a href="/register" class="btn btn-primary">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
 
                     Start Now
 

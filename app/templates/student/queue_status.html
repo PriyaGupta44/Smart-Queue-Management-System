@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Queue Status — Queue Management System{% endblock %}
+
+{% block content %}
+<h1>Live Queue Status</h1>
+
+<div class="card">
+    <div class="token-display">{{ entry.token_number }}</div>
+    <span class="status-pill status-{{ entry.status }}">{{ entry.status }}</span>
+
+    {% if position %}
+        <div class="position-badge">You are #{{ position }} in line</div>
+        <p style="margin-top:10px; color:#666;">
+            Estimated wait: roughly {{ position * 5 }} minutes (assuming ~5 min per token).
+        </p>
+    {% elif entry.status == 'called' %}
+        <p style="margin-top:14px; color:#0a58ca; font-weight:600;">
+            🔔 You've been called — please proceed to the counter.
+        </p>
+    {% endif %}
+
+    <p style="margin-top:20px;">
+        <a href="{{ url_for('student.dashboard') }}" class="btn btn-outline">Back to dashboard</a>
+    </p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Lightweight auto-refresh so students see position updates without
+    // manually reloading. Swap for websockets/SSE later if you want
+    // truly real-time updates (see README "Future Improvements").
+    setTimeout(() => window.location.reload(), 15000);
+</script>
+{% endblock %}

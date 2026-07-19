@@ -14,9 +14,9 @@
 
     <!-- CSS -->
 
-    <link rel="stylesheet" href="static/CSS/style.css">
-    <link rel="stylesheet" href="static/CSS/navbar.css">
-    <link rel="stylesheet" href="static/CSS/login.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 
 </head>
 
@@ -36,13 +36,13 @@
 
                 <ul class="nav-links">
 
-                    <li><a href="/" >Home</a></li>
+                    <li><a href="{{ url_for('main.home') }}">Home</a></li>
 
-                    <li><a href="/about">About</a></li>
+                    <li><a href="{{ url_for('main.about') }}">About</a></li>
 
-                    <li><a href="/services">Services</a></li>
+                    <li><a href="{{ url_for('main.services') }}">Services</a></li>
 
-                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
 
                 </ul>
 
@@ -50,11 +50,11 @@
 
             <div class="nav-buttons">
 
-                <a href="/login" class="btn btn-primary">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
                     Login
                 </a>
 
-                <a href="/register" class="btn btn-outline">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline">
                     Register
                 </a>
 
@@ -109,7 +109,7 @@ book tokens online and save valuable time.
 
 </ul>
 
-<img src="static/image/Queue.jpg">
+<img src="{{ url_for('static', filename='images/Queue.jpg') }}">
 
 </div>
 
@@ -131,29 +131,41 @@ Sign in to continue
 
 </p>
 
-<form>
+<form method="POST" action="{{ url_for('auth.login') }}">
+
+{{ form.hidden_tag() }}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <p class="flash flash-{{ category }}">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
 
 <div class="input-box">
 
 <i class="fa-solid fa-envelope"></i>
 
-<input type="email" placeholder="Email Address">
+{{ form.email(placeholder="Email Address") }}
 
 </div>
+{% for error in form.email.errors %}<p class="flash flash-danger">{{ error }}</p>{% endfor %}
 
 <div class="input-box">
 
 <i class="fa-solid fa-lock"></i>
 
-<input type="password" placeholder="Password">
+{{ form.password(placeholder="Password") }}
 
 </div>
+{% for error in form.password.errors %}<p class="flash flash-danger">{{ error }}</p>{% endfor %}
 
 <div class="remember">
 
 <label>
 
-<input type="checkbox">
+{{ form.remember_me() }}
 
 Remember Me
 
@@ -167,11 +179,7 @@ Forgot Password?
 
 </div>
 
-<button>
-
-Login
-
-</button>
+{{ form.submit(class="btn") }}
 
 <div class="divider">
 
@@ -207,7 +215,7 @@ GitHub
 
 Don't have an account?
 
-<a href="/register">
+<a href="{{ url_for('auth.register') }}">
 
 Create Account
 

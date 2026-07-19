@@ -15,10 +15,10 @@
 
     <!-- CSS -->
 
-    <link rel="stylesheet" href="static/CSS/style.css">
-    <link rel="stylesheet" href="static/CSS/navbar.css">
-    <link rel="stylesheet" href="static/CSS/contact.css">
-    <link rel="stylesheet" href="static/CSS/footer.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
 
 </head>
 
@@ -38,13 +38,13 @@
 
                 <ul class="nav-links">
 
-                    <li><a href="/">Home</a></li>
+                    <li><a href="{{ url_for('main.home') }}">Home</a></li>
 
-                    <li><a href="/about">About</a></li>
+                    <li><a href="{{ url_for('main.about') }}">About</a></li>
 
-                    <li><a href="/services">Services</a></li>
+                    <li><a href="{{ url_for('main.services') }}">Services</a></li>
 
-                    <li><a href="/contact" class="active">Contact</a></li>
+                    <li><a href="{{ url_for('main.contact') }}" class="active">Contact</a></li>
 
                 </ul>
 
@@ -52,11 +52,11 @@
 
             <div class="nav-buttons">
 
-                <a href="/login" class="btn btn-outline">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline">
                     Login
                 </a>
 
-                <a href="/register" class="btn btn-primary">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
                     Register
                 </a>
 

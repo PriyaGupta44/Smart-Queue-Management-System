@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Queue Management System{% endblock %}
+
+{% block content %}
+<h1>Welcome, {{ current_user.full_name }}</h1>
+
+{% if entry %}
+    <div class="card">
+        <h2>Your Active Token</h2>
+        <div class="token-display">{{ entry.token_number }}</div>
+        <span class="status-pill status-{{ entry.status }}">{{ entry.status }}</span>
+
+        {% if position %}
+            <div class="position-badge">Position in queue: #{{ position }}</div>
+        {% endif %}
+
+        <p style="margin-top:18px;">
+            <a href="{{ url_for('student.queue_status') }}" class="btn btn-primary">View live status</a>
+        </p>
+
+        {% if not entry.payment or entry.payment.status != 'success' %}
+            <form method="POST" action="{{ url_for('student.pay', entry_id=entry.id) }}" style="margin-top:14px;">
+                <button type="submit" class="btn-sm btn-pay">Pay Fee (Simulated)</button>
+            </form>
+        {% else %}
+            <p style="margin-top:14px; color:#157347;">
+                ✅ Paid — receipt {{ entry.payment.receipt_number }}
+            </p>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="card">
+        <h2>You don't have an active token</h2>
+        <p>Join the virtual queue to get a token and track your position in real time.</p>
+        <form method="POST" action="{{ url_for('student.join_queue') }}">
+            <button type="submit" class="btn btn-primary">Join Queue</button>
+        </form>
+    </div>
+{% endif %}
+{% endblock %}
