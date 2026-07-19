@@ -1,0 +1,109 @@
+.page-wrap {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    min-height: 60vh;
+}
+
+.flash-stack {
+    max-width: 1000px;
+    margin: 0 auto 20px;
+    padding: 0;
+}
+
+.flash {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.flash-success { background: #e5f9ee; color: #157347; border: 1px solid #b7e4c7; }
+.flash-danger  { background: #fdecea; color: #b02a37; border: 1px solid #f5c2c7; }
+.flash-warning { background: #fff8e5; color: #997404; border: 1px solid #ffe69c; }
+.flash-info    { background: #e7f3fe; color: #0a58ca; border: 1px solid #b6d4fe; }
+
+.welcome-name {
+    font-weight: 500;
+    margin-right: 12px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    padding: 28px;
+    margin-bottom: 24px;
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+.token-display {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #4f46e5;
+}
+
+.position-badge {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4338ca;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+table.qtable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.qtable th, table.qtable td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+table.qtable th {
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.status-pill {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-waiting { background: #fff8e5; color: #997404; }
+.status-called { background: #e7f3fe; color: #0a58ca; }
+.status-completed { background: #e5f9ee; color: #157347; }
+.status-cancelled { background: #f1f1f1; color: #666; }
+
+.btn-sm {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.btn-call { background: #4f46e5; color: #fff; }
+.btn-complete { background: #157347; color: #fff; }
+.btn-pay { background: #4f46e5; color: #fff; }
+
+.empty-state {
+    color: #888;
+    padding: 30px 0;
+    text-align: center;
+}
