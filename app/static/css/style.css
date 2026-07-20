@@ -580,3 +580,20 @@ flex-direction:column;
 }
 
 }
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    margin-bottom:15px;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    outline:none;
+    border-color:#2563eb;
+}
