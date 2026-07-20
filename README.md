@@ -116,31 +116,29 @@ The objective of this project is to demonstrate a smarter and more efficient app
 ---
 
 ## 📂 Project Structure
-
-```text
-smart-queue-fee-payment-system/
+Smart-Queue-Management-System/
 │
-├── app.py
-├── README.md
-├── requirements.txt
-├── .gitignore
+├── 📁 app/
+│   ├── 📁 admin/
+│   ├── 📁 auth/
+│   ├── 📁 main/
+│   ├── 📁 student/
+│   ├── 📁 models/
+│   ├── 📁 static/
+│   │   ├── 📁 css/
+│   │   ├── 📁 js/
+│   │   ├── 📁 images/
+│   │   └── 📁 uploads/
+│   ├── 📁 templates/
+│   ├── 📄 extensions.py
+│   └── 📄 __init__.py
 │
-├── static/
-│   ├── css/
-│   ├── js/
-│   └── images/
-│
-├── templates/
-│
-├── database/
-│
-├── docs/
-│   ├── diagrams/
-│   ├── screenshots/
-│   └── notes/
-│
-└── assets/
-```
+├── 📄 config.py
+├── 📄 requirements.txt
+├── 📄 run.py
+├── 📄 .gitignore
+├── 📄 README.md
+└── 📄 LICENSE
 
 ---
 
