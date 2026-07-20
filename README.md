@@ -255,7 +255,29 @@ Continue building the frontend of the Queue Management System by creating reusab
 
 ## 📅 Day 6  - Changing project structure into a professional structures
 
-## Project structure loading...
+Smart-Queue-Management-System/
+│
+├── 📁 app/
+│   ├── 📁 admin/
+│   ├── 📁 auth/
+│   ├── 📁 main/
+│   ├── 📁 student/
+│   ├── 📁 models/
+│   ├── 📁 static/
+│   │   ├── 📁 css/
+│   │   ├── 📁 js/
+│   │   ├── 📁 images/
+│   │   └── 📁 uploads/
+│   ├── 📁 templates/
+│   ├── 📄 extensions.py
+│   └── 📄 __init__.py
+│
+├── 📄 config.py
+├── 📄 requirements.txt
+├── 📄 run.py
+├── 📄 .gitignore
+├── 📄 README.md
+└── 📄 LICENSE
 
 
 ## Day 7 - Disturbed because of internet problem and busy days
