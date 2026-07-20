@@ -107,3 +107,14 @@ table.qtable th {
     padding: 30px 0;
     text-align: center;
 }
+
+.dashboard-card{
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+    transition:.3s ease;
+}
+
+.dashboard-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 35px rgba(0,0,0,.15);
+}
