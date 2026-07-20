@@ -258,7 +258,28 @@ Continue building the frontend of the Queue Management System by creating reusab
 ## Project structure loading...
 
 
-## Day 7 - Disturbed because of internet problem and busys days
+## Day 7 - Disturbed because of internet problem and busy days
+
+
+## 📅 Day 8 – Responsive UI Improvements
+
+### ✅ Completed
+
+* Added a dedicated `responsive.css` file.
+* Made the application responsive for desktop, tablet, and mobile devices.
+* Improved buttons, forms, dashboard cards, and tables for a better user experience.
+* Organized responsive styles for easier maintenance.
+
+### 📚 What I Learned
+
+* Using CSS media queries for responsive design.
+* Creating mobile-friendly layouts and reusable UI components.
+* Improving usability with consistent styling and responsive tables.
+
+### 🚀 Next Up
+
+Implement search and filtering functionality for the admin dashboard.
+
 
 ## 🚀 Future Improvements
 
