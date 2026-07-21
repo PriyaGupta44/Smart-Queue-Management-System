@@ -296,9 +296,42 @@ Smart-Queue-Management-System/
 * Creating mobile-friendly layouts and reusable UI components.
 * Improving usability with consistent styling and responsive tables.
 
-### 🚀 Next Up
+## 📅 Day 9 – Backend Feature Completion (retroactive note)
 
-Implement search and filtering functionality for the admin dashboard.
+The journal below stalled at Day 8, but development continued past what
+was logged here. By Day 9, the backend was fully functional: student
+registration/login/logout, queue join + live status tracking, simulated
+fee payment with receipts, and a full admin dashboard (call next / mark
+completed / payment records) protected by role-based access control.
+A pytest suite covers registration, login, queue logic, and the admin
+workflow. This entry exists to keep the journal honest about where the
+project actually stood before Day 10.
+
+## 📅 Day 10 – Real Database Migrations & Git Hygiene
+
+### 🎯 Objective
+
+Replace ad-hoc database creation with a proper, versioned Flask-Migrate
+workflow, and clean up files that never should have been committed.
+
+### ✅ Tasks Completed
+
+* Rewrote `.gitignore` to exclude `__pycache__/`, `venv/`, `instance/`.
+* Removed the tracked `instance/app.db` and all tracked `.pyc` files
+  from Git (kept locally, just untracked).
+* Deleted two unused empty files: `app/models/admin.py`,
+  `app/student/forms.py`.
+* Ran `flask db init` to scaffold the Alembic migration environment.
+* Generated and reviewed the first migration
+  (`students`, `queue_entries`, `payments` tables).
+* Applied the migration with `flask db upgrade`.
+
+### 📚 Key Concepts Learned
+
+* Why database files and compiled bytecode should never be committed.
+* How Flask-Migrate connects to an app built with the factory pattern.
+* The autogenerate → review → upgrade migration workflow.
+* Using `git rm --cached` to untrack files without deleting them locally.
 
 
 ## 🚀 Future Improvements
