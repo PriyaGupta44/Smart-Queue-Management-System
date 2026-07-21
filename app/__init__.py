@@ -1,7 +1,7 @@
 from flask import Flask
 
 from config import config
-from app.extensions import db, login_manager, csrf
+from app.extensions import db, login_manager, csrf, migrate
 
 
 def create_app(config_name="default"):
@@ -19,6 +19,7 @@ def create_app(config_name="default"):
     db.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
+    migrate.init_app(app, db)
 
     # --- register blueprints ---
     from app.main.routes import main_bp
