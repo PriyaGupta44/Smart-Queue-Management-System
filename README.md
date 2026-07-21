@@ -334,7 +334,7 @@ workflow, and clean up files that never should have been committed.
 * Using `git rm --cached` to untrack files without deleting them locally.
 
 
-## 🚀 Future Improvements
+## Future Improvements
 
 * QR Code Queue System
 * Online Payment Gateway Integration
