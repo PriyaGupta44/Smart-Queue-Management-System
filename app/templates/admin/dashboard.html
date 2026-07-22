@@ -19,6 +19,7 @@
                 <td>{{ entry.called_at.strftime('%H:%M:%S') if entry.called_at else '—' }}</td>
                 <td>
                     <form method="POST" action="{{ url_for('admin.complete', entry_id=entry.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="btn-sm btn-complete">Mark Completed</button>
                     </form>
                 </td>
@@ -47,6 +48,7 @@
                 <td>{{ entry.created_at.strftime('%H:%M:%S') if entry.created_at else '—' }}</td>
                 <td>
                     <form method="POST" action="{{ url_for('admin.call_next', entry_id=entry.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="btn-sm btn-call">Call Next</button>
                     </form>
                 </td>
