@@ -1,11 +1,29 @@
 {% extends "base.html" %}
+{% from "admin/_pagination.html" import render_pagination %}
 {% block title %}Admin Dashboard — Queue Management System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .search-form { display: flex; gap: 8px; margin-bottom: 20px; }
+    .search-form input[type="text"] { flex: 1; padding: 8px 12px; }
+    .pagination { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
+    .page-info { color: #666; font-size: 0.9rem; }
+</style>
+{% endblock %}
 
 {% block content %}
 <h1>Admin Dashboard</h1>
 
+<form method="GET" action="{{ url_for('admin.dashboard') }}" class="search-form">
+    <input type="text" name="q" value="{{ search }}" placeholder="Search by name, email, or token...">
+    <button type="submit" class="btn btn-primary">Search</button>
+    {% if search %}
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline">Clear</a>
+    {% endif %}
+</form>
+
 <div class="card">
-    <h2>Called ({{ called|length }})</h2>
+    <h2>Called ({{ called_pagination.total }})</h2>
     {% if called %}
     <table class="qtable">
         <thead>
@@ -27,13 +45,14 @@
             {% endfor %}
         </tbody>
     </table>
+    {{ render_pagination(called_pagination, "called_page", {"q": search, "waiting_page": waiting_pagination.page}) }}
     {% else %}
-        <p class="empty-state">No one has been called yet.</p>
+        <p class="empty-state">{{ "No matches found." if search else "No one has been called yet." }}</p>
     {% endif %}
 </div>
 
 <div class="card">
-    <h2>Waiting ({{ waiting|length }})</h2>
+    <h2>Waiting ({{ waiting_pagination.total }})</h2>
     {% if waiting %}
     <table class="qtable">
         <thead>
@@ -42,7 +61,7 @@
         <tbody>
             {% for entry in waiting %}
             <tr>
-                <td>{{ loop.index }}</td>
+                <td>{{ (waiting_pagination.page - 1) * waiting_pagination.per_page + loop.index }}</td>
                 <td>{{ entry.token_number }}</td>
                 <td>{{ entry.student.full_name }}</td>
                 <td>{{ entry.created_at.strftime('%H:%M:%S') if entry.created_at else '—' }}</td>
@@ -56,8 +75,9 @@
             {% endfor %}
         </tbody>
     </table>
+    {{ render_pagination(waiting_pagination, "waiting_page", {"q": search, "called_page": called_pagination.page}) }}
     {% else %}
-        <p class="empty-state">Queue is empty.</p>
+        <p class="empty-state">{{ "No matches found." if search else "Queue is empty." }}</p>
     {% endif %}
 </div>
 
