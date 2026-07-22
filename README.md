@@ -334,6 +334,34 @@ workflow, and clean up files that never should have been committed.
 * Using `git rm --cached` to untrack files without deleting them locally.
 
 
+## 📅 Day 11 – CSRF Protection Fix
+
+### 🎯 Objective
+
+Fix a security bug where 4 forms (join queue, pay fee, call next,
+mark completed) had no CSRF token, despite CSRF protection being
+enabled application-wide - meaning those actions were silently
+broken for real users.
+
+### ✅ Tasks Completed
+
+* Added hidden CSRF token fields to all 4 previously-unprotected forms.
+* Added a dedicated `csrf_client` test fixture that runs with CSRF
+  protection actually enabled (the main suite disables it for
+  convenience).
+* Added regression tests proving requests without a token are
+  rejected (400) and requests with a real token succeed (200).
+
+### 📚 Key Concepts Learned
+
+* Why a green test suite doesn't always mean a feature works -
+  `WTF_CSRF_ENABLED = False` in testing config hid this bug entirely.
+* How Flask-WTF's `csrf_token()` Jinja global works without needing
+  a full WTForms `FlaskForm` for simple action-only forms.
+* Writing a test fixture that overrides app config for a narrow set
+  of tests without touching the shared fixtures everyone else uses.
+
+
 ## Future Improvements
 
 * QR Code Queue System
