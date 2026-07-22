@@ -362,6 +362,32 @@ broken for real users.
   of tests without touching the shared fixtures everyone else uses.
 
 
+  ## 📅 Day 12 – Admin Dashboard Search & Pagination
+
+### 🎯 Objective
+
+Replace unbounded queue queries on the admin dashboard with paginated,
+searchable ones, so the page stays fast and usable as real usage grows.
+
+### ✅ Tasks Completed
+
+* Added an index on `queue_entries.status` and generated its migration.
+* Rewrote the dashboard route to support `?q=`, `?waiting_page=`, and
+  `?called_page=` query parameters using SQLAlchemy's `.paginate()`.
+* Built a reusable Jinja macro for Prev/Next pagination controls.
+* Fixed the waiting-list position numbers to stay correct across pages.
+* Split admin-specific tests into their own file
+  (`tests/test_admin_dashboard.py`).
+
+### 📚 Key Concepts Learned
+
+* Why `WHERE`-filtered columns benefit from a database index.
+* SQLAlchemy `.paginate()` vs `.all()`, and why GET search forms don't
+  need a CSRF token while POST action forms do.
+* Writing a Jinja macro to avoid duplicating pagination markup twice
+  on one page while preserving each table's independent page state.
+
+
 ## Future Improvements
 
 * QR Code Queue System
