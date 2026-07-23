@@ -419,6 +419,38 @@ signed, expiring tokens.
   reset responses, successful password resets, and invalid/expired
   reset tokens.
 
+  ## 📅 Day 14 – Token-Number Race Condition Fix
+
+### 🎯 Objective
+
+Fix a long-flagged bug: two students joining the queue at nearly the
+same moment could be assigned the same token number, which crashed
+the second request with an unhandled 500 error instead of failing
+gracefully.
+
+### ✅ Tasks Completed
+
+* Widened the random token range (900 → 9,000 possible values/day) to
+  reduce how often collisions happen at all.
+* Added a retry loop in `join_queue()` that catches the database's
+  `IntegrityError` on a colliding token and tries again with a fresh
+  one, up to 5 attempts.
+* Added a clear, user-facing error message for the (extremely
+  unlikely) case where every retry still collides.
+* Added deterministic tests simulating a forced collision and a
+  fully-exhausted retry, using `monkeypatch` instead of real
+  concurrency or timing.
+
+### 📚 Key Concepts Learned
+
+* Why "check if it exists, then insert" is itself a race condition,
+  and why letting a database UNIQUE constraint be the real source of
+  truth (with retry-on-conflict) avoids that trap entirely.
+* Catching a specific exception (`IntegrityError`) rather than a bare
+  `except:`, so only the expected failure mode gets retried.
+* Testing a race condition deterministically with `monkeypatch`
+  instead of relying on real concurrent requests or timing.
+
 ### 📚 Key Concepts Learned
 
 * Using SQLAlchemy's `@validates` decorator for model-level validation.
