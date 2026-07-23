@@ -70,7 +70,7 @@ def dashboard():
     )
 
     return render_template(
-        "dashboard.html",
+        "admin/dashboard.html",
         waiting=waiting_pagination.items,
         called=called_pagination.items,
         waiting_pagination=waiting_pagination,
