@@ -19,7 +19,11 @@ def create_app(config_name="default"):
     db.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
-    migrate.init_app(app, db)
+    # render_as_batch=True: SQLite can't ALTER a table to add a CHECK
+    # constraint in place like Postgres/MySQL can. Batch mode has
+    # Alembic instead recreate the table with the new constraint and
+    # copy the data over. Only matters for SQLite; harmless elsewhere.
+    migrate.init_app(app, db, render_as_batch=True)
 
     # --- register blueprints ---
     from app.main.routes import main_bp
@@ -62,13 +66,13 @@ def register_cli(app):
         email = email.lower()
         existing = Student.query.filter_by(email=email).first()
         if existing:
-            existing.role = "admin"
+            existing.role = Student.ROLE_ADMIN
             existing.set_password(password)
             db.session.commit()
             click.echo(f"Existing user {email} promoted to admin.")
             return
 
-        admin = Student(full_name=full_name, email=email, role="admin")
+        admin = Student(full_name=full_name, email=email, role=Student.ROLE_ADMIN)
         admin.set_password(password)
         db.session.add(admin)
         db.session.commit()
