@@ -1,4 +1,6 @@
 from datetime import datetime, timezone
+from flask import current_app
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from sqlalchemy.orm import validates
@@ -20,19 +22,11 @@ class Student(UserMixin, db.Model):
 
     __tablename__ = "students"
 
-    # Single source of truth for valid role values. Referenced by the
-    # validator below, by is_admin, and by seed_admin — nowhere else
-    # in the codebase should the strings "student"/"admin" appear.
     ROLE_STUDENT = "student"
     ROLE_ADMIN = "admin"
     ALLOWED_ROLES = {ROLE_STUDENT, ROLE_ADMIN}
 
     __table_args__ = (
-        # Defense in depth: even if a bug or a raw SQL script bypasses
-        # the @validates hook below, SQLite itself will still refuse
-        # to write a row with an invalid role. Keep this list in sync
-        # with ALLOWED_ROLES above by hand — SQL CHECK constraints
-        # can't reference Python constants directly.
         db.CheckConstraint("role IN ('student', 'admin')", name="ck_students_role_valid"),
     )
 
@@ -40,20 +34,13 @@ class Student(UserMixin, db.Model):
     full_name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(20), nullable=False, default=ROLE_STUDENT)  # "student" | "admin"
+    role = db.Column(db.String(20), nullable=False, default=ROLE_STUDENT)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
-    # one student can have many queue tokens over time (retakes, repeat visits)
     queue_entries = db.relationship("QueueEntry", backref="student", lazy="dynamic")
 
     @validates("role")
     def validate_role(self, key, value):
-        """Runs automatically whenever `role` is set — on __init__,
-        and on any later `student.role = ...` assignment.
-
-        Normalizes casing/whitespace, then rejects anything outside
-        ALLOWED_ROLES with a clear error instead of letting a typo
-        silently become "the role is now whatever string I typed"."""
         normalized = value.strip().lower()
         if normalized not in self.ALLOWED_ROLES:
             raise ValueError(
@@ -70,6 +57,34 @@ class Student(UserMixin, db.Model):
     @property
     def is_admin(self):
         return self.role == self.ROLE_ADMIN
+
+    def get_reset_token(self):
+        """Build a signed, self-expiring token identifying this student.
+
+        The token embeds this student's email plus a timestamp, both
+        signed with the app's SECRET_KEY. Expiry isn't checked here —
+        it's checked later in verify_reset_token(), which is the only
+        place that knows how much time should be allowed to pass.
+        """
+        serializer = URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
+        return serializer.dumps(self.email, salt="password-reset")
+
+    @staticmethod
+    def verify_reset_token(token, max_age=1800):
+        """Validate a reset token and return the matching Student, or
+        None if the token is invalid, tampered with, or expired.
+
+        max_age is in seconds; 1800 = 30 minutes. Any failure here
+        (bad signature, expired, unknown email) returns None rather
+        than raising — callers shouldn't need to know *why* a token
+        failed, just that it did.
+        """
+        serializer = URLSafeTimedSerializer(current_app.config["SECRET_KEY"])
+        try:
+            email = serializer.loads(token, salt="password-reset", max_age=max_age)
+        except (BadSignature, SignatureExpired):
+            return None
+        return Student.query.filter_by(email=email).first()
 
     def __repr__(self):
         return f"<Student {self.email}>"
