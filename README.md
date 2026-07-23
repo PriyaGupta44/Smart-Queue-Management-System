@@ -387,6 +387,52 @@ searchable ones, so the page stays fast and usable as real usage grows.
 * Writing a Jinja macro to avoid duplicating pagination markup twice
   on one page while preserving each table's independent page state.
 
+  ## 📅 Day 13 – Role Validation & Password Reset
+
+### 🎯 Objective
+
+Strengthen application security by preventing invalid user roles from
+being stored and implementing a secure password reset workflow using
+signed, expiring tokens.
+
+### ✅ Tasks Completed
+
+* Added `ROLE_STUDENT`, `ROLE_ADMIN`, and `ALLOWED_ROLES` constants as
+  the single source of truth for valid user roles.
+* Added a `@validates("role")` hook to normalize role values and reject
+  invalid entries before they reach the database.
+* Added a database-level `CHECK` constraint to enforce valid roles,
+  protecting against invalid data inserted through raw SQL.
+* Enabled SQLite batch-mode migrations (`render_as_batch=True`) to
+  support adding constraints to an existing table.
+* Replaced hardcoded `"admin"` values with the
+  `Student.ROLE_ADMIN` constant for better maintainability.
+* Implemented a complete password reset flow using
+  `itsdangerous` signed, time-limited tokens.
+* Added `/auth/forgot-password` and
+  `/auth/reset-password/<token>` routes with matching templates.
+* Protected against user enumeration by always displaying the same
+  response message, regardless of whether an email exists.
+* Logged password reset links to the console for development
+  (email integration will be added later).
+* Added automated tests covering role validation, generic password
+  reset responses, successful password resets, and invalid/expired
+  reset tokens.
+
+### 📚 Key Concepts Learned
+
+* Using SQLAlchemy's `@validates` decorator for model-level validation.
+* Defense-in-depth by combining application validation with
+  database constraints.
+* SQLite batch-mode migrations and why they are needed when modifying
+  existing table constraints.
+* Using `itsdangerous.URLSafeTimedSerializer` to generate secure,
+  self-expiring password reset tokens.
+* Preventing user-enumeration attacks by avoiding different responses
+  for registered and unregistered email addresses.
+* Using `url_for(..., _external=True)` to generate absolute URLs for
+  password reset links.
+
 
 ## Future Improvements
 
