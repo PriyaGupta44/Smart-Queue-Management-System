@@ -465,6 +465,31 @@ gracefully.
 * Using `url_for(..., _external=True)` to generate absolute URLs for
   password reset links.
 
+## 📅 Day 15 – Email Delivery & Template Routing Improvements
+
+### 🎯 Objective
+
+Implement real password reset email delivery, fix the admin/student
+dashboard template collision, and improve the payment success
+experience.
+
+### ✅ Tasks Completed
+
+- Integrated Flask-Mail with Gmail SMTP using environment variables.
+- Updated `.env.example` with email configuration and Gmail App Password setup.
+- Added plain-text and HTML password reset email templates.
+- Updated password reset to send real emails with safe error handling.
+- Fixed Blueprint template collisions using fully-qualified template paths.
+- Added tests for email delivery, template routing, and payment messages.
+- Improved the payment success flash message to include the receipt number.
+
+### 📚 Key Concepts Learned
+
+- Secure Gmail SMTP integration with App Passwords.
+- Sending and testing emails with Flask-Mail.
+- Safe handling of external service failures.
+- Preventing Blueprint template collisions with fully-qualified template paths.
+- Using automated tests to protect against future regressions.
 
 ## Future Improvements
 
