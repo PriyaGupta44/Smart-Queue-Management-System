@@ -1,6 +1,6 @@
 """Tests for the forgot-password / reset-password flow."""
 
-from app.extensions import db
+from app.extensions import db, mail
 from app.models.student import Student
 
 
@@ -13,9 +13,6 @@ def _make_student(email="reset@example.com", password="oldpassword123"):
 
 
 def test_forgot_password_shows_generic_message_for_unknown_email(client, app):
-    with app.app_context():
-        pass  # no student created — this email genuinely doesn't exist
-
     response = client.post(
         "/auth/forgot-password",
         data={"email": "nobody@example.com"},
@@ -35,8 +32,35 @@ def test_forgot_password_shows_identical_message_for_known_email(client, app, db
         follow_redirects=True,
     )
 
-    # Same wording as the "unknown email" case above — that's the point.
     assert b"If an account with that email exists" in response.data
+
+
+def test_forgot_password_sends_email_for_known_account(client, app, db):
+    with app.app_context():
+        _make_student()
+
+    with mail.record_messages() as outbox:
+        client.post(
+            "/auth/forgot-password",
+            data={"email": "reset@example.com"},
+            follow_redirects=True,
+        )
+
+    assert len(outbox) == 1
+    assert outbox[0].recipients == ["reset@example.com"]
+    assert "reset your" in outbox[0].subject.lower()
+    assert "reset-password" in outbox[0].body
+
+
+def test_forgot_password_sends_no_email_for_unknown_account(client, app):
+    with mail.record_messages() as outbox:
+        client.post(
+            "/auth/forgot-password",
+            data={"email": "nobody@example.com"},
+            follow_redirects=True,
+        )
+
+    assert len(outbox) == 0
 
 
 def test_reset_password_with_valid_token_changes_password(client, app, db):
@@ -68,8 +92,6 @@ def test_verify_reset_token_rejects_expired_token(app, db):
         student = _make_student()
         token = student.get_reset_token()
 
-        # max_age=-1 guarantees the token is treated as already expired,
-        # regardless of how fast this test runs.
         result = Student.verify_reset_token(token, max_age=-1)
 
         assert result is None
