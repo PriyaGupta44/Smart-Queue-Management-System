@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_mail import Message
 
-from app.extensions import db
+from app.extensions import db, mail
 from app.models.student import Student
 from app.auth.forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
 
@@ -61,6 +62,32 @@ def logout():
     return redirect(url_for("main.home"))
 
 
+def _send_reset_email(student, reset_url):
+    """Send the password reset email.
+
+    Failures are logged, not raised. forgot_password() always shows the
+    same generic message regardless of whether sending succeeded — if
+    we let a send failure surface differently to the user, that would
+    leak information about which emails are registered, defeating the
+    whole point of the generic message.
+    """
+    message = Message(
+        subject="Reset your Queue Management System password",
+        recipients=[student.email],
+        body=render_template("email/reset_password.txt", student=student, reset_url=reset_url),
+        html=render_template("email/reset_password.html", student=student, reset_url=reset_url),
+    )
+    try:
+        mail.send(message)
+    except Exception:
+        # Broad except is deliberate here: SMTP failures can surface as
+        # several different exception types (connection errors, auth
+        # errors, timeouts), and none of them should crash the request
+        # or change what the user sees. We still want the full error
+        # logged for ourselves, which is what .exception() does.
+        current_app.logger.exception("Failed to send password reset email to %s", student.email)
+
+
 @auth_bp.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
     if current_user.is_authenticated:
@@ -73,15 +100,9 @@ def forgot_password():
         if student:
             token = student.get_reset_token()
             reset_url = url_for("auth.reset_password", token=token, _external=True)
-            # No email service is wired up yet — log the link so it's
-            # usable in local development. Replace this with a real
-            # send once Flask-Mail (or similar) is configured.
-            current_app.logger.info("Password reset link for %s: %s", student.email, reset_url)
+            _send_reset_email(student, reset_url)
 
-        # Identical message whether or not the account exists — this
-        # is what prevents this form from being used to discover
-        # which emails are registered on the site.
-        flash("If an account with that email exists, a reset link has been logged.", "info")
+        flash("If an account with that email exists, a reset link has been sent.", "info")
         return redirect(url_for("auth.login"))
 
     return render_template("forgot_password.html", form=form)
