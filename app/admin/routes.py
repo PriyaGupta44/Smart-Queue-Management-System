@@ -10,19 +10,12 @@ from app.models.queue import QueueEntry
 from app.models.payment import Payment
 from app.models.student import Student
 
-admin_bp = Blueprint("admin", __name__, template_folder="../templates/admin")
+admin_bp = Blueprint("admin", __name__)
 
-# Rows per page on the admin dashboard tables. A module-level constant
-# rather than a magic number in the route — easy to find, easy to tune.
 DASHBOARD_PER_PAGE = 10
 
 
 def admin_required(view_func):
-    """Same idea as @login_required, but also checks role == 'admin'.
-    Stacks on top of @login_required (below it), so an anonymous user
-    gets redirected to login first, and a logged-in non-admin gets a
-    403 rather than silently seeing the login page again."""
-
     @wraps(view_func)
     def wrapped(*args, **kwargs):
         if not current_user.is_admin:
@@ -108,4 +101,4 @@ def complete(entry_id):
 @admin_required
 def payments():
     records = Payment.query.order_by(Payment.created_at.desc()).all()
-    return render_template("payments.html", payments=records)
+    return render_template("admin/payments.html", payments=records)

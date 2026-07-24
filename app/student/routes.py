@@ -9,33 +9,17 @@ from app.extensions import db
 from app.models.queue import QueueEntry
 from app.models.payment import Payment
 
-student_bp = Blueprint("student", __name__, template_folder="../templates/student")
+student_bp = Blueprint("student", __name__)
 
-# How many times to retry generating a token number if two requests
-# collide on the same random value. 5 is generous — even at the old,
-# narrower random range, the odds of colliding 5 times in a row are
-# vanishingly small; this is a safety net, not the expected path.
 MAX_TOKEN_GENERATION_ATTEMPTS = 5
 
 
 def _generate_token_number():
-    """Daily token like 'Q-20260713-4231'.
-
-    Uniqueness isn't actually guaranteed by this function alone — two
-    concurrent requests can still compute the same number. What makes
-    tokens genuinely unique is the UNIQUE constraint on
-    QueueEntry.token_number at the database level, combined with the
-    retry loop in join_queue() below. Widening the range here (from
-    3 digits to 4) just makes that retry path rarer in practice.
-    """
     today = datetime.now(timezone.utc).strftime("%Y%m%d")
     return f"Q-{today}-{random.randint(1000, 9999)}"
 
 
 def _position_in_queue(entry):
-    """A student's position = how many WAITING entries were created
-    before theirs. Computed on read instead of stored, so it's always
-    correct even after other entries are completed or cancelled."""
     if entry.status != QueueEntry.STATUS_WAITING:
         return None
     ahead = QueueEntry.query.filter(
@@ -54,7 +38,7 @@ def dashboard():
         ).first()
     )
     position = _position_in_queue(active_entry) if active_entry else None
-    return render_template("dashboard.html", entry=active_entry, position=position)
+    return render_template("student/dashboard.html", entry=active_entry, position=position)
 
 
 @student_bp.route("/queue/join", methods=["POST"])
@@ -73,19 +57,12 @@ def join_queue():
         try:
             db.session.commit()
         except IntegrityError:
-            # Another request landed on the same token number at the
-            # same moment. The database's UNIQUE constraint is what
-            # actually caught it — roll back the failed insert and
-            # try again with a fresh number, instead of trusting our
-            # own randomness to never collide.
             db.session.rollback()
             continue
         else:
             flash(f"Joined the queue — your token is {entry.token_number}.", "success")
             return redirect(url_for("student.dashboard"))
 
-    # Every attempt collided — extraordinarily unlikely, but fail
-    # honestly instead of crashing with a raw 500 page.
     flash("We couldn't generate a queue token right now — please try again in a moment.", "danger")
     return redirect(url_for("student.dashboard"))
 
@@ -103,7 +80,7 @@ def queue_status():
         return redirect(url_for("student.dashboard"))
 
     position = _position_in_queue(entry)
-    return render_template("queue_status.html", entry=entry, position=position)
+    return render_template("student/queue_status.html", entry=entry, position=position)
 
 
 @student_bp.route("/payment/<int:entry_id>/pay", methods=["POST"])
@@ -123,5 +100,8 @@ def pay(entry_id):
     db.session.add(payment)
     db.session.commit()
 
-    flash("Payment successful.", "success")
+    flash(
+        f"🎉 Congratulations! Your payment was successful. Receipt: {payment.receipt_number}",
+        "success",
+    )
     return redirect(url_for("student.dashboard"))
