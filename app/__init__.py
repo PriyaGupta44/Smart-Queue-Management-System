@@ -1,31 +1,19 @@
 from flask import Flask
 
 from config import config
-from app.extensions import db, login_manager, csrf, migrate
+from app.extensions import db, login_manager, csrf, migrate, mail
 
 
 def create_app(config_name="default"):
-    """
-    Application factory. Building the app inside a function (instead of
-    at module level like the old app.py) means:
-      - tests can spin up a fresh app with TestingConfig
-      - extensions get attached to the app cleanly (no circular imports)
-      - nothing runs a dev server just from being imported
-    """
     app = Flask(__name__)
     app.config.from_object(config[config_name])
 
-    # --- attach extensions to this app instance ---
     db.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
-    # render_as_batch=True: SQLite can't ALTER a table to add a CHECK
-    # constraint in place like Postgres/MySQL can. Batch mode has
-    # Alembic instead recreate the table with the new constraint and
-    # copy the data over. Only matters for SQLite; harmless elsewhere.
     migrate.init_app(app, db, render_as_batch=True)
+    mail.init_app(app)
 
-    # --- register blueprints ---
     from app.main.routes import main_bp
     from app.auth.routes import auth_bp
     from app.student.routes import student_bp
@@ -36,7 +24,6 @@ def create_app(config_name="default"):
     app.register_blueprint(student_bp, url_prefix="/student")
     app.register_blueprint(admin_bp, url_prefix="/admin")
 
-    # --- models must be imported so Flask-Migrate/db.create_all can see them ---
     from app.models import student, queue, payment  # noqa: F401
 
     register_cli(app)
@@ -45,14 +32,6 @@ def create_app(config_name="default"):
 
 
 def register_cli(app):
-    """CLI commands, kept separate from HTTP routes on purpose.
-
-    Admin accounts must never be created through the public /register
-    form (that would let anyone grant themselves admin access). This
-    command is the only supported way to create one:
-
-        flask --app run.py seed-admin admin@college.edu "Admin Name"
-    """
     import click
 
     @app.cli.command("seed-admin")
