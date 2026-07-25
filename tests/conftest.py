@@ -26,6 +26,8 @@ def db(app):
     return _db
 
 
+
+
 def _csrf_token(client, get_url):
     """Fetch a page and pull its real CSRF token out of the rendered
     HTML, if one is present.
