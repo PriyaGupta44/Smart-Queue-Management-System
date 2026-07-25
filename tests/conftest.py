@@ -1,3 +1,5 @@
+import re
+
 import pytest
 
 from app import create_app
@@ -24,22 +26,36 @@ def db(app):
     return _db
 
 
+def _csrf_token(client, get_url):
+    """Fetch a page and pull its real CSRF token out of the rendered
+    HTML, if one is present.
+
+    Returns None when the page has no csrf_token field (e.g. CSRF is
+    disabled for this app under the plain `client` fixture) — callers
+    only attach the token to their POST when one was actually found,
+    so this works transparently whether CSRF protection is on or off.
+    """
+    response = client.get(get_url)
+    match = re.search(rb'name="csrf_token" value="([^"]+)"', response.data)
+    return match.group(1).decode() if match else None
+
+
 def register(client, email="student@example.com", password="password123", full_name="Test Student"):
-    return client.post(
-        "/auth/register",
-        data={
-            "full_name": full_name,
-            "email": email,
-            "password": password,
-            "confirm_password": password,
-        },
-        follow_redirects=True,
-    )
+    data = {
+        "full_name": full_name,
+        "email": email,
+        "password": password,
+        "confirm_password": password,
+    }
+    token = _csrf_token(client, "/auth/register")
+    if token:
+        data["csrf_token"] = token
+    return client.post("/auth/register", data=data, follow_redirects=True)
 
 
 def login(client, email="student@example.com", password="password123"):
-    return client.post(
-        "/auth/login",
-        data={"email": email, "password": password},
-        follow_redirects=True,
-    )
+    data = {"email": email, "password": password}
+    token = _csrf_token(client, "/auth/login")
+    if token:
+        data["csrf_token"] = token
+    return client.post("/auth/login", data=data, follow_redirects=True)
