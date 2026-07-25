@@ -34,7 +34,8 @@ class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     WTF_CSRF_ENABLED = False  # simplifies posting forms in tests
-    MAIL_SUPPRESS_SEND = True  # explicit, even though TESTING=True implies it
+    MAIL_SUPPRESS_SEND = True
+    MAIL_DEFAULT_SENDER = "noreply@example.com"
 
 
 class ProductionConfig(Config):
