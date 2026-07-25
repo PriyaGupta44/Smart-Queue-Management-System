@@ -1,4 +1,9 @@
-from flask import Flask
+import os
+import logging
+from logging.handlers import RotatingFileHandler
+
+from flask import Flask, render_template
+from flask_wtf.csrf import CSRFError
 
 from config import config
 from app.extensions import db, login_manager, csrf, migrate, mail
@@ -27,8 +32,100 @@ def create_app(config_name="default"):
     from app.models import student, queue, payment  # noqa: F401
 
     register_cli(app)
+    configure_logging(app)
+    register_error_handlers(app)
 
     return app
+
+
+def configure_logging(app):
+    """Write errors and warnings to a rotating log file on disk.
+
+    Skipped entirely during tests (app.testing) — pytest already
+    captures stdout/stderr per test, and creating real log files on
+    every test run would just be noise and disk churn.
+    """
+    if app.testing:
+        return
+
+    project_root = os.path.dirname(app.root_path)
+    log_dir = os.path.join(project_root, "logs")
+    os.makedirs(log_dir, exist_ok=True)
+
+    file_handler = RotatingFileHandler(
+        os.path.join(log_dir, "app.log"),
+        maxBytes=1_000_000,  # rotate after ~1MB
+        backupCount=5,       # keep 5 old log files before deleting the oldest
+    )
+    file_handler.setFormatter(
+        logging.Formatter(
+            "%(asctime)s %(levelname)s %(name)s: %(message)s [in %(pathname)s:%(lineno)d]"
+        )
+    )
+    file_handler.setLevel(logging.INFO)
+
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info("Application startup")
+
+
+def register_error_handlers(app):
+    """Custom pages for common HTTP errors, instead of Flask's bare
+    defaults or (in debug mode) the interactive debugger."""
+
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(error):
+        # Specific to CSRF failures — Flask matches this before the
+        # more general 400 handler below, since CSRFError is a more
+        # specific exception class than a plain BadRequest.
+        app.logger.warning("CSRF validation failed: %s", error.description)
+        return render_template(
+            "errors/generic.html",
+            error_code=400,
+            error_title="Bad Request",
+            error_message="Your form submission could not be verified. Please go back and try again.",
+        ), 400
+
+    @app.errorhandler(400)
+    def bad_request(error):
+        return render_template(
+            "errors/generic.html",
+            error_code=400,
+            error_title="Bad Request",
+            error_message="The request could not be understood. Please try again.",
+        ), 400
+
+    @app.errorhandler(403)
+    def forbidden(error):
+        return render_template(
+            "errors/generic.html",
+            error_code=403,
+            error_title="Access Denied",
+            error_message="You do not have permission to view this page.",
+        ), 403
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return render_template(
+            "errors/generic.html",
+            error_code=404,
+            error_title="Page Not Found",
+            error_message="The page you are looking for does not exist or may have been moved.",
+        ), 404
+
+    @app.errorhandler(500)
+    def internal_error(error):
+        # A failed request may have left a half-finished database
+        # transaction pending on this session. Roll it back so the
+        # next request isn't affected by whatever went wrong here.
+        db.session.rollback()
+        app.logger.exception("Unhandled exception")
+        return render_template(
+            "errors/generic.html",
+            error_code=500,
+            error_title="Something Went Wrong",
+            error_message="We have logged the issue and are looking into it. Please try again in a few moments.",
+        ), 500
 
 
 def register_cli(app):
