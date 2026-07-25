@@ -63,7 +63,7 @@ def join_queue():
             flash(f"Joined the queue — your token is {entry.token_number}.", "success")
             return redirect(url_for("student.dashboard"))
 
-    flash("We couldn't generate a queue token right now — please try again in a moment.", "danger")
+    flash("We could not generate a queue token right now. please try again in a moment.", "danger")
     return redirect(url_for("student.dashboard"))
 
 
