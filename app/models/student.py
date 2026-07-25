@@ -39,6 +39,26 @@ class Student(UserMixin, db.Model):
 
     queue_entries = db.relationship("QueueEntry", backref="student", lazy="dynamic")
 
+
+    def __init__(self, **kwargs):
+        """Apply the role default immediately, in Python.
+
+        db.Column(default=...) is a DATABASE-level default — SQLAlchemy
+        only applies it when the row is flushed/committed, not the
+        moment Student(...) is constructed. Without this override, a
+        freshly-built, not-yet-saved Student has role=None, which is
+        surprising and fragile to test against. Setting it here also
+        means @validates("role") runs immediately, so the value is
+        normalized from the moment the object exists, not just after
+        a database round-trip.
+        """
+        kwargs.setdefault("role", self.ROLE_STUDENT)
+        super().__init__(**kwargs)
+
+    @validates("role")
+    def validate_role(self, key, value):
+        ...
+
     @validates("role")
     def validate_role(self, key, value):
         normalized = value.strip().lower()

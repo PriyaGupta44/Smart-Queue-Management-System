@@ -64,7 +64,7 @@ def test_join_queue_fails_gracefully_when_every_retry_collides(client, db, app, 
     response = client.post("/student/queue/join", follow_redirects=True)
 
     assert response.status_code == 200  # graceful redirect, not a 500
-    assert b"couldn't generate a queue token" in response.data
+    assert b"could not generate a queue token" in response.data
     with app.app_context():
         # Only the first student's entry exists — the second student's
         # join attempt never committed a (duplicate) row.
