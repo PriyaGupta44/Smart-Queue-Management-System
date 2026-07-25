@@ -491,6 +491,52 @@ experience.
 - Preventing Blueprint template collisions with fully-qualified template paths.
 - Using automated tests to protect against future regressions.
 
+## 📅 Day 15 – Error Handling, Logging & Critical Bug Fixes
+
+### 🎯 Objective
+
+Give the app production-grade error handling and logging, and fix two
+real bugs found in code review: missing status-transition guards on
+admin queue actions, and an insecure SECRET_KEY fallback.
+
+### ✅ Tasks Completed
+
+**Error pages & logging:**
+* Added a rotating file log (`logs/app.log`, 1MB per file, 5 backups).
+* Added error handlers for 400 (including CSRF failures
+  specifically), 403, 404, and 500 — each rendering one shared,
+  parameterized template.
+* Made the 500 handler roll back the database session and log the
+  full traceback before responding.
+* Consolidated the `csrf_client` test fixture into `conftest.py` so
+  it's reusable across test files.
+* Added `tests/test_error_pages.py` covering all four error pages.
+
+**Bug fixes:**
+* Added status guards to `call_next()`/`complete()` — each now
+  requires the entry to be in the correct prior state, preventing a
+  double-click or resubmission from corrupting the queue's
+  `waiting → called → completed` state machine.
+* Removed the insecure SECRET_KEY fallback; production now refuses
+  to start without one, via a `Config.init_app(app)` validation hook.
+* Added `tests/test_config.py` and `tests/test_queue_state_guards.py`
+  covering both fixes.
+
+### 📚 Key Concepts Learned
+
+* Why Flask's interactive debugger takes over instead of your custom
+  500 handler when `DEBUG=True` — and how to properly test the
+  handler anyway (`TESTING=False`, `PROPAGATE_EXCEPTIONS=False`).
+* `RotatingFileHandler` for capped, self-managing log files.
+* Registering a handler for a specific exception class (`CSRFError`)
+  alongside a general one for its parent HTTP status code.
+* Enforcing a state machine's valid transitions explicitly, rather
+  than trusting the UI to only ever submit valid sequences.
+* Why SECRET_KEY compromise affects sessions, CSRF, *and* password
+  reset tokens all at once — and why "fail loudly at startup" beats
+  "silently run insecurely." The `Config.init_app(app)` pattern for
+  environment-specific startup validation.
+
 ## Future Improvements
 
 * QR Code Queue System
