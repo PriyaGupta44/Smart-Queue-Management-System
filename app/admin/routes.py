@@ -102,3 +102,44 @@ def complete(entry_id):
 def payments():
     records = Payment.query.order_by(Payment.created_at.desc()).all()
     return render_template("admin/payments.html", payments=records)
+
+@admin_bp.route("/queue/<int:entry_id>/call", methods=["POST"])
+@login_required
+@admin_required
+def call_next(entry_id):
+    entry = QueueEntry.query.get_or_404(entry_id)
+
+    if entry.status != QueueEntry.STATUS_WAITING:
+        # Guards against double-clicks, stale form resubmission, or two
+        # admins acting on the same entry at once — without this, an
+        # already-called or already-completed entry could silently be
+        # "called" again, overwriting called_at and corrupting the
+        # audit trail.
+        flash(f"{entry.token_number} is not waiting and cannot be called.", "warning")
+        return redirect(url_for("admin.dashboard"))
+
+    entry.status = QueueEntry.STATUS_CALLED
+    entry.called_at = datetime.now(timezone.utc)
+    db.session.commit()
+    flash(f"Called {entry.token_number}.", "success")
+    return redirect(url_for("admin.dashboard"))
+
+
+@admin_bp.route("/queue/<int:entry_id>/complete", methods=["POST"])
+@login_required
+@admin_required
+def complete(entry_id):
+    entry = QueueEntry.query.get_or_404(entry_id)
+
+    if entry.status != QueueEntry.STATUS_CALLED:
+        # An entry must go waiting -> called -> completed in order.
+        # Without this guard, a still-waiting entry could be marked
+        # completed directly, skipping the "called" step entirely.
+        flash(f"{entry.token_number} must be called before it can be completed.", "warning")
+        return redirect(url_for("admin.dashboard"))
+
+    entry.status = QueueEntry.STATUS_COMPLETED
+    entry.completed_at = datetime.now(timezone.utc)
+    db.session.commit()
+    flash(f"Marked {entry.token_number} as completed.", "success")
+    return redirect(url_for("admin.dashboard"))
