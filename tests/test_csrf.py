@@ -18,12 +18,6 @@ import pytest
 from tests.conftest import register, login
 
 
-@pytest.fixture()
-def csrf_client(app):
-    """A test client for an app with CSRF protection actually enabled."""
-    app.config["WTF_CSRF_ENABLED"] = True
-    return app.test_client()
-
 
 def _extract_csrf_token(html: bytes) -> str:
     """Pull the real csrf_token value out of a rendered page's HTML."""

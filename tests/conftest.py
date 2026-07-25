@@ -26,6 +26,17 @@ def db(app):
     return _db
 
 
+@pytest.fixture()
+def csrf_client(app):
+    """A test client for an app with CSRF protection actually enabled.
+
+    The plain `client` fixture uses TestingConfig, which disables CSRF
+    so most tests can post forms without needing a real token. This
+    fixture flips it back on for the tests that specifically need to
+    verify CSRF is enforced.
+    """
+    app.config["WTF_CSRF_ENABLED"] = True
+    return app.test_client()
 
 
 def _csrf_token(client, get_url):
