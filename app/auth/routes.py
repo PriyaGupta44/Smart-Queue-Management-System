@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, current_
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_mail import Message
 
-from app.extensions import db, mail
+from app.extensions import db, mail, limiter
 from app.models.student import Student
 from app.auth.forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
 
@@ -10,6 +10,7 @@ auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.route("/register", methods=["GET", "POST"])
+@limiter.limit("5 per hour")
 def register():
     if current_user.is_authenticated:
         return redirect(url_for("student.dashboard"))
@@ -33,6 +34,7 @@ def register():
 
 
 @auth_bp.route("/login", methods=["GET", "POST"])
+@limiter.limit("10 per minute")
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("student.dashboard"))
@@ -76,6 +78,7 @@ def _send_reset_email(student, reset_url):
 
 
 @auth_bp.route("/forgot-password", methods=["GET", "POST"])
+@limiter.limit("3 per hour")
 def forgot_password():
     if current_user.is_authenticated:
         return redirect(url_for("student.dashboard"))
