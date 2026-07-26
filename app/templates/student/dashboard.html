@@ -3,6 +3,9 @@
 
 {% block content %}
 <h1>Welcome, {{ current_user.full_name }}</h1>
+<p style="margin-top:-8px; margin-bottom:20px;">
+    <a href="{{ url_for('student.payment_history') }}">View Payment History →</a>
+</p>
 
 {% if entry %}
     <div class="card">
