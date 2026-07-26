@@ -72,3 +72,23 @@ def login(client, email="student@example.com", password="password123"):
     if token:
         data["csrf_token"] = token
     return client.post("/auth/login", data=data, follow_redirects=True)
+
+
+@pytest.fixture()
+def rate_limited_client(app):
+    """A test client with rate limiting actually enabled.
+
+    TestingConfig sets RATELIMIT_ENABLED = False so the rest of the
+    suite (which calls register()/login() many times per test file)
+    never gets tripped up by rate limits. This fixture flips
+    enforcement back on just for the tests that specifically need to
+    verify it — and resets any leftover counts first, since
+    Flask-Limiter's in-memory storage is shared across the whole test
+    run, not isolated per app instance.
+    """
+    from app.extensions import limiter
+
+    limiter.enabled = True
+    limiter.reset()
+    yield app.test_client()
+    limiter.enabled = False
