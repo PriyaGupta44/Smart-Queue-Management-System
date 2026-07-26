@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Receipt {{ payment.receipt_number }} — Queue Management System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .receipt-card { max-width: 480px; margin: 40px auto; padding: 30px; border: 1px solid #e5e5e5; border-radius: 10px; }
+    .receipt-card h2 { text-align: center; margin-bottom: 4px; }
+    .receipt-sub { text-align: center; color: #666; margin-bottom: 24px; }
+    .receipt-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+    .receipt-row:last-child { border-bottom: none; font-weight: 600; }
+    @media print {
+        .navbar, .no-print { display: none !important; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="receipt-card">
+    <h2>Payment Receipt</h2>
+    <p class="receipt-sub">Queue Management System</p>
+
+    <div class="receipt-row"><span>Receipt No.</span><span>{{ payment.receipt_number }}</span></div>
+    <div class="receipt-row"><span>Token</span><span>{{ payment.queue_entry.token_number }}</span></div>
+    <div class="receipt-row"><span>Student</span><span>{{ payment.queue_entry.student.full_name }}</span></div>
+    <div class="receipt-row"><span>Date Paid</span><span>{{ payment.paid_at.strftime('%d %b %Y, %H:%M') if payment.paid_at else '—' }}</span></div>
+    <div class="receipt-row"><span>Status</span><span>{{ payment.status|capitalize }}</span></div>
+    <div class="receipt-row"><span>Amount Paid</span><span>{{ "%.2f"|format(payment.amount) }}</span></div>
+</div>
+
+<p class="no-print" style="text-align:center;">
+    <button onclick="window.print()" class="btn btn-primary">Print / Save as PDF</button>
+    <a href="{{ url_for('student.payment_history') }}" class="btn btn-outline">Back to Payment History</a>
+</p>
+{% endblock %}
