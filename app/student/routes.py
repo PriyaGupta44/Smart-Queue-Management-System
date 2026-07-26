@@ -105,3 +105,30 @@ def pay(entry_id):
         "success",
     )
     return redirect(url_for("student.dashboard"))
+
+
+@student_bp.route("/payments")
+@login_required
+def payment_history():
+    payments = (
+        Payment.query.join(QueueEntry)
+        .filter(QueueEntry.student_id == current_user.id)
+        .order_by(Payment.created_at.desc())
+        .all()
+    )
+    return render_template("student/payment_history.html", payments=payments)
+
+
+@student_bp.route("/payments/<int:payment_id>/receipt")
+@login_required
+def receipt(payment_id):
+    # Filtering on QueueEntry.student_id == current_user.id here (not
+    # just Payment.id) is what prevents one student from viewing
+    # another student's receipt by guessing/incrementing the URL — an
+    # IDOR vulnerability if this only checked that the payment exists.
+    payment = (
+        Payment.query.join(QueueEntry)
+        .filter(Payment.id == payment_id, QueueEntry.student_id == current_user.id)
+        .first_or_404()
+    )
+    return render_template("student/receipt.html", payment=payment)
