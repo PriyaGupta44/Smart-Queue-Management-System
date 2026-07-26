@@ -21,7 +21,7 @@ class Config:
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
     MAIL_DEFAULT_SENDER = os.environ.get("MAIL_DEFAULT_SENDER", MAIL_USERNAME)
 
-    # --- Rate limiting ---
+    # --- Rate limiting --
     # "memory://" (the default) keeps counts in this process's RAM —
     # fine for a single-process deployment, but each gunicorn worker
     # would have its OWN separate counts if run with multiple workers.
