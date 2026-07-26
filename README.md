@@ -503,20 +503,13 @@ admin queue actions, and an insecure SECRET_KEY fallback.
 
 **Error pages & logging:**
 * Added a rotating file log (`logs/app.log`, 1MB per file, 5 backups).
-* Added error handlers for 400 (including CSRF failures
-  specifically), 403, 404, and 500 — each rendering one shared,
-  parameterized template.
-* Made the 500 handler roll back the database session and log the
-  full traceback before responding.
-* Consolidated the `csrf_client` test fixture into `conftest.py` so
-  it's reusable across test files.
+* Added error handlers for 400 (including CSRF failures specifically), 403, 404, and 500 — each rendering one shared, parameterized template.
+* Made the 500 handler roll back the database session and log the full traceback before responding.
+* Consolidated the `csrf_client` test fixture into `conftest.py` so it's reusable across test files.
 * Added `tests/test_error_pages.py` covering all four error pages.
 
 **Bug fixes:**
-* Added status guards to `call_next()`/`complete()` — each now
-  requires the entry to be in the correct prior state, preventing a
-  double-click or resubmission from corrupting the queue's
-  `waiting → called → completed` state machine.
+* Added status guards to `call_next()`/`complete()` — each now requires the entry to be in the correct prior state, preventing a double-click or resubmission from corrupting the queue's `waiting → called → completed` state machine.
 * Removed the insecure SECRET_KEY fallback; production now refuses
   to start without one, via a `Config.init_app(app)` validation hook.
 * Added `tests/test_config.py` and `tests/test_queue_state_guards.py`
@@ -524,18 +517,48 @@ admin queue actions, and an insecure SECRET_KEY fallback.
 
 ### 📚 Key Concepts Learned
 
-* Why Flask's interactive debugger takes over instead of your custom
-  500 handler when `DEBUG=True` — and how to properly test the
-  handler anyway (`TESTING=False`, `PROPAGATE_EXCEPTIONS=False`).
+* Why Flask's interactive debugger takes over instead of your custom 500 handler when `DEBUG=True` — and how to properly test the handler anyway (`TESTING=False`, `PROPAGATE_EXCEPTIONS=False`).
 * `RotatingFileHandler` for capped, self-managing log files.
-* Registering a handler for a specific exception class (`CSRFError`)
-  alongside a general one for its parent HTTP status code.
-* Enforcing a state machine's valid transitions explicitly, rather
-  than trusting the UI to only ever submit valid sequences.
-* Why SECRET_KEY compromise affects sessions, CSRF, *and* password
-  reset tokens all at once — and why "fail loudly at startup" beats
-  "silently run insecurely." The `Config.init_app(app)` pattern for
-  environment-specific startup validation.
+* Registering a handler for a specific exception class (`CSRFError`) alongside a general one for its parent HTTP status code.
+* Enforcing a state machine's valid transitions explicitly, rather than trusting the UI to only ever submit valid sequences.
+* Why SECRET_KEY compromise affects sessions, CSRF, *and* password reset tokens all at once — and why "fail loudly at startup" beats "silently run insecurely." The `Config.init_app(app)` pattern for environment-specific startup validation.
+
+## 📅 Day 16 – Payment History, Receipt System, Rate Limiting & Security Hardening
+
+### 🎯 Objective
+
+Enhanced the student payment experience by adding payment history and printable receipts while strengthening the application's security with rate limiting and secure cookie configuration, making the system significantly more production-ready.
+
+### ✅ Tasks Completed
+
+#### Student Payment History & Receipts
+
+* Added `/student/payments` to display the logged-in student's payment history.
+* Added `/student/payments/<id>/receipt` for a dedicated printable receipt view.
+* Protected receipt access by verifying ownership, preventing IDOR (Insecure Direct Object Reference) attacks.
+* Added a **Payment History** link to the student dashboard.
+* Wrote tests covering both successful access and unauthorized receipt access.
+
+#### Security Hardening
+
+* Added **Flask-Limiter** to protect authentication endpoints:
+
+  * Login: **10 requests/minute**
+  * Register: **5 requests/hour**
+  * Forgot Password: **3 requests/hour**
+* Added a custom **429 Too Many Requests** error page.
+* Secured session and remember-me cookies using **HttpOnly**, **SameSite=Lax**, and environment-based **Secure** flags.
+* Added dedicated rate-limiting test fixtures and automated tests to verify all limits.
+
+### 📚 Key Concepts Learned
+
+* Preventing **IDOR** by enforcing resource ownership in database queries.
+* Returning **404** instead of **403** for unauthorized resources to avoid leaking their existence.
+* Creating printable receipts using browser print styles (`@media print`) without external PDF libraries.
+* Implementing **rate limiting** to protect against brute-force attacks and endpoint abuse.
+* Understanding **HttpOnly**, **SameSite**, and **Secure** cookie flags and the security risks they mitigate.
+* Managing shared extension state in automated tests to ensure reliable rate-limit testing.
+
 
 ## Future Improvements
 
