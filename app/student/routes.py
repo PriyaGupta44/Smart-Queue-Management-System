@@ -115,6 +115,31 @@ def queue_status():
         "student/queue_status.html", entry=entry, position=position, eta_minutes=eta_minutes
     )
 
+@student_bp.route("/queue/status/data")
+@login_required
+def queue_status_data():
+    """JSON version of queue_status(), polled by the page's JS every
+    10 seconds instead of reloading the whole page."""
+    entry = (
+        current_user.queue_entries.filter(
+            QueueEntry.status.in_([QueueEntry.STATUS_WAITING, QueueEntry.STATUS_CALLED])
+        ).first()
+    )
+    if not entry:
+        return jsonify({"active": False})
+
+    position = _position_in_queue(entry)
+    eta_minutes = round(position * _average_minutes_per_token()) if position else None
+
+    return jsonify(
+        {
+            "active": True,
+            "status": entry.status,
+            "token_number": entry.token_number,
+            "position": position,
+            "eta_minutes": eta_minutes,
+        }
+    )
 
 @student_bp.route("/payment/<int:entry_id>/pay", methods=["POST"])
 @login_required
