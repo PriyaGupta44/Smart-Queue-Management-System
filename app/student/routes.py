@@ -4,6 +4,7 @@ import random
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
+from flask import Blueprint, render_template, redirect, url_for, flash, jsonify
 
 from app.extensions import db
 from app.models.queue import QueueEntry
@@ -27,6 +28,35 @@ def _position_in_queue(entry):
         QueueEntry.created_at < entry.created_at,
     ).count()
     return ahead + 1
+
+def _average_minutes_per_token():
+    """Real average service time, from the last 20 completed entries'
+    actual called_at -> completed_at duration.
+
+    Falls back to a fixed 5-minute estimate only when there isn't
+    enough history yet (a brand-new deployment with no completed
+    entries) — this keeps the ETA meaningful from day one instead of
+    showing a blank or zero estimate.
+    """
+    recent_completed = (
+        QueueEntry.query.filter(
+            QueueEntry.status == QueueEntry.STATUS_COMPLETED,
+            QueueEntry.called_at.isnot(None),
+            QueueEntry.completed_at.isnot(None),
+        )
+        .order_by(QueueEntry.completed_at.desc())
+        .limit(20)
+        .all()
+    )
+
+    if not recent_completed:
+        return 5.0
+
+    total_seconds = sum(
+        (e.completed_at - e.called_at).total_seconds() for e in recent_completed
+    )
+    average_seconds = total_seconds / len(recent_completed)
+    return max(average_seconds / 60, 1.0)  # never estimate under 1 minute
 
 
 @student_bp.route("/dashboard")
