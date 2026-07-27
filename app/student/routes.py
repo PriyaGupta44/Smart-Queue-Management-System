@@ -110,7 +110,10 @@ def queue_status():
         return redirect(url_for("student.dashboard"))
 
     position = _position_in_queue(entry)
-    return render_template("student/queue_status.html", entry=entry, position=position)
+    eta_minutes = round(position * _average_minutes_per_token()) if position else None
+    return render_template(
+        "student/queue_status.html", entry=entry, position=position, eta_minutes=eta_minutes
+    )
 
 
 @student_bp.route("/payment/<int:entry_id>/pay", methods=["POST"])
