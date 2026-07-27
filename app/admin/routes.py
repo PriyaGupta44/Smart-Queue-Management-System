@@ -112,3 +112,45 @@ def complete(entry_id):
 def payments():
     records = Payment.query.order_by(Payment.created_at.desc()).all()
     return render_template("admin/payments.html", payments=records)
+
+
+STUDENTS_PER_PAGE = 15
+
+
+@admin_bp.route("/students")
+@login_required
+@admin_required
+def students():
+    search = request.args.get("q", "").strip()
+    page = request.args.get("page", 1, type=int)
+
+    query = Student.query.filter(Student.role == Student.ROLE_STUDENT)
+
+    if search:
+        like_pattern = f"%{search}%"
+        query = query.filter(
+            or_(Student.full_name.ilike(like_pattern), Student.email.ilike(like_pattern))
+        )
+
+    query = query.order_by(Student.created_at.desc())
+    pagination = query.paginate(page=page, per_page=STUDENTS_PER_PAGE, error_out=False)
+
+    return render_template(
+        "admin/students.html",
+        students=pagination.items,
+        pagination=pagination,
+        search=search,
+    )
+
+
+@admin_bp.route("/students/<int:student_id>")
+@login_required
+@admin_required
+def student_detail(student_id):
+    student = Student.query.filter_by(id=student_id, role=Student.ROLE_STUDENT).first_or_404()
+    entries = (
+        QueueEntry.query.filter_by(student_id=student.id)
+        .order_by(QueueEntry.created_at.desc())
+        .all()
+    )
+    return render_template("admin/student_detail.html", student=student, entries=entries)
