@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "admin/_pagination.html" import render_pagination %}
+{% block title %}Students — Queue Management System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .search-form { display: flex; gap: 8px; margin-bottom: 20px; }
+    .search-form input[type="text"] { flex: 1; padding: 8px 12px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Students ({{ pagination.total }})</h1>
+
+<form method="GET" action="{{ url_for('admin.students') }}" class="search-form">
+    <input type="text" name="q" value="{{ search }}" placeholder="Search by name or email...">
+    <button type="submit" class="btn btn-primary">Search</button>
+    {% if search %}
+        <a href="{{ url_for('admin.students') }}" class="btn btn-outline">Clear</a>
+    {% endif %}
+</form>
+
+<div class="card">
+    {% if students %}
+    <table class="qtable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Registered On</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.full_name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.created_at.strftime('%d %b %Y') if student.created_at else '—' }}</td>
+                <td><a href="{{ url_for('admin.student_detail', student_id=student.id) }}" class="btn-sm btn-outline">View History</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {{ render_pagination(pagination, "page", "admin.students", {"q": search}) }}
+    {% else %}
+        <p class="empty-state">{{ "No matches found." if search else "No students registered yet." }}</p>
+    {% endif %}
+</div>
+
+<p><a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline">Back to Dashboard</a></p>
+{% endblock %}
