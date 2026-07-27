@@ -559,6 +559,30 @@ Enhanced the student payment experience by adding payment history and printable 
 * Understanding **HttpOnly**, **SameSite**, and **Secure** cookie flags and the security risks they mitigate.
 * Managing shared extension state in automated tests to ensure reliable rate-limit testing.
 
+## 📅 Day 17 – Live Queue Updates & Admin Student Management
+
+### 🎯 Objective
+
+Enhance the student queue experience with real-time status updates and accurate, history-based ETAs while expanding the admin panel with a searchable, paginated student directory and detailed student history pages.
+
+### ✅ Tasks Completed
+
+* Replaced the hardcoded queue ETA with `_average_minutes_per_token()`, which calculates estimated waiting time from the last 20 completed queue entries, falling back to a default value when no history is available.
+* Added `/student/queue/status/data`, a lightweight JSON endpoint that the queue status page polls every 10 seconds.
+* Replaced full-page `window.location.reload()` with a `fetch()`-based polling system that updates only the required queue information and automatically stops once the student has been called.
+* Generalized the reusable pagination partial by adding an `endpoint` parameter, allowing it to be shared across multiple admin pages.
+* Added `/admin/students` with search and pagination, and `/admin/students/<id>` to display each student's complete queue and payment history.
+* Linked the new student management section from the admin dashboard.
+* Added comprehensive tests covering ETA calculation, JSON response contract, access control, search functionality, and exclusion of admin accounts from the student roster.
+
+### 📚 Key Concepts Learned
+
+* Computing dynamic ETAs from real historical data instead of relying on fixed estimates.
+* Using lightweight polling with `fetch()` and targeted DOM updates to create a smoother user experience without full-page refreshes.
+* Applying progressive enhancement by keeping the application fully functional without JavaScript while adding live updates when JavaScript is available.
+* Designing reusable UI components by generalizing pagination instead of duplicating code.
+* Building secure, role-based admin features with searchable, paginated data views and detailed per-user history pages.
+
 
 ## Future Improvements
 
