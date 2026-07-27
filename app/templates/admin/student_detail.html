@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ student.full_name }} — Queue Management System{% endblock %}
+
+{% block content %}
+<h1>{{ student.full_name }}</h1>
+<p style="color:#666;">{{ student.email }} · Registered {{ student.created_at.strftime('%d %b %Y') if student.created_at else '—' }}</p>
+
+<div class="card">
+    <h2>Queue History ({{ entries|length }})</h2>
+    {% if entries %}
+    <table class="qtable">
+        <thead>
+            <tr>
+                <th>Token</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Payment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+            <tr>
+                <td>{{ entry.token_number }}</td>
+                <td><span class="status-pill status-{{ entry.status }}">{{ entry.status }}</span></td>
+                <td>{{ entry.created_at.strftime('%d %b %Y, %H:%M') if entry.created_at else '—' }}</td>
+                <td>
+                    {% if entry.payment and entry.payment.status == "success" %}
+                        Paid — {{ entry.payment.receipt_number }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="empty-state">This student has not joined the queue yet.</p>
+    {% endif %}
+</div>
+
+<p><a href="{{ url_for('admin.students') }}" class="btn btn-outline">Back to Students</a></p>
+{% endblock %}
