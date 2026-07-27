@@ -13,6 +13,9 @@
 
 {% block content %}
 <h1>Admin Dashboard</h1>
+<p style="margin-top:-10px; margin-bottom:16px;">
+    <a href="{{ url_for('admin.students') }}">View All Students →</a>
+</p>
 
 <form method="GET" action="{{ url_for('admin.dashboard') }}" class="search-form">
     <input type="text" name="q" value="{{ search }}" placeholder="Search by name, email, or token...">
@@ -45,7 +48,7 @@
             {% endfor %}
         </tbody>
     </table>
-    {{ render_pagination(called_pagination, "called_page", {"q": search, "waiting_page": waiting_pagination.page}) }}
+    {{ render_pagination(called_pagination, "called_page", "admin.dashboard", {"q": search, "waiting_page": waiting_pagination.page}) }}
     {% else %}
         <p class="empty-state">{{ "No matches found." if search else "No one has been called yet." }}</p>
     {% endif %}
@@ -75,7 +78,7 @@
             {% endfor %}
         </tbody>
     </table>
-    {{ render_pagination(waiting_pagination, "waiting_page", {"q": search, "called_page": called_pagination.page}) }}
+    {{ render_pagination(waiting_pagination, "waiting_page", "admin.dashboard", {"q": search, "called_page": called_pagination.page}) }}
     {% else %}
         <p class="empty-state">{{ "No matches found." if search else "Queue is empty." }}</p>
     {% endif %}
