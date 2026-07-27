@@ -6,18 +6,18 @@
 
 <div class="card">
     <div class="token-display">{{ entry.token_number }}</div>
-    <span class="status-pill status-{{ entry.status }}">{{ entry.status }}</span>
+    <span id="status-pill" class="status-pill status-{{ entry.status }}">{{ entry.status }}</span>
 
-    {% if position %}
-        <div class="position-badge">You are #{{ position }} in line</div>
-        <p style="margin-top:10px; color:#666;">
-            Estimated wait: roughly {{ position * 5 }} minutes (assuming ~5 min per token).
-        </p>
-    {% elif entry.status == 'called' %}
-        <p style="margin-top:14px; color:#0a58ca; font-weight:600;">
-            🔔 You've been called — please proceed to the counter.
-        </p>
-    {% endif %}
+    <div id="position-badge" class="position-badge" style="{{ 'display:none;' if entry.status != 'waiting' else '' }}">
+        {% if position %}You are #{{ position }} in line{% endif %}
+    </div>
+    <p id="eta-text" style="margin-top:10px; color:#666; {{ 'display:none;' if entry.status != 'waiting' else '' }}">
+        {% if eta_minutes %}Estimated wait: roughly {{ eta_minutes }} minutes{% endif %}
+    </p>
+
+    <p id="called-banner" style="margin-top:14px; color:#0a58ca; font-weight:600; {{ 'display:none;' if entry.status != 'called' else '' }}">
+        🔔 You have been called — please proceed to the counter.
+    </p>
 
     <p style="margin-top:20px;">
         <a href="{{ url_for('student.dashboard') }}" class="btn btn-outline">Back to dashboard</a>
@@ -27,9 +27,57 @@
 
 {% block extra_js %}
 <script>
-    // Lightweight auto-refresh so students see position updates without
-    // manually reloading. Swap for websockets/SSE later if you want
-    // truly real-time updates (see README "Future Improvements").
-    setTimeout(() => window.location.reload(), 15000);
+    const POLL_INTERVAL_MS = 10000;
+    const DASHBOARD_URL = "{{ url_for('student.dashboard') }}";
+    const STATUS_DATA_URL = "{{ url_for('student.queue_status_data') }}";
+
+    function renderUpdate(data) {
+        if (!data.active) {
+            // The entry was completed/cancelled elsewhere (e.g. an
+            // admin acted on it) — send the student back to their
+            // dashboard rather than keep polling a token that's gone.
+            window.location.href = DASHBOARD_URL;
+            return;
+        }
+
+        const statusPill = document.getElementById("status-pill");
+        statusPill.textContent = data.status;
+        statusPill.className = "status-pill status-" + data.status;
+
+        const positionBadge = document.getElementById("position-badge");
+        const etaText = document.getElementById("eta-text");
+        const calledBanner = document.getElementById("called-banner");
+
+        if (data.status === "waiting") {
+            positionBadge.style.display = "block";
+            positionBadge.textContent = data.position ? "You are #" + data.position + " in line" : "";
+            etaText.style.display = "block";
+            etaText.textContent = data.eta_minutes ? "Estimated wait: roughly " + data.eta_minutes + " minutes" : "";
+            calledBanner.style.display = "none";
+        } else if (data.status === "called") {
+            positionBadge.style.display = "none";
+            etaText.style.display = "none";
+            calledBanner.style.display = "block";
+        }
+    }
+
+    async function pollStatus() {
+        try {
+            const response = await fetch(STATUS_DATA_URL);
+            const data = await response.json();
+            renderUpdate(data);
+
+            // Stop polling once called — there's nothing left to wait for.
+            if (data.active && data.status !== "called") {
+                setTimeout(pollStatus, POLL_INTERVAL_MS);
+            }
+        } catch (error) {
+            // A network hiccup shouldn't kill polling entirely — just
+            // try again on the next interval.
+            setTimeout(pollStatus, POLL_INTERVAL_MS);
+        }
+    }
+
+    setTimeout(pollStatus, POLL_INTERVAL_MS);
 </script>
 {% endblock %}
