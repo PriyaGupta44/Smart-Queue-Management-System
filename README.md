@@ -1,144 +1,130 @@
-# 🎓 Smart Queue-Based College Fee Payment System
+![Tests](https://github.com/PriyaGupta44/Smart-Queue-Management-System/actions/workflows/ci.yml/badge.svg)
 
-## 📌 Project Overview
+# QueueFlow — Smart Queue Management System
 
-The **Smart Queue-Based College Fee Payment System** is a full-stack web application designed to solve one of the most common problems faced during college fee collection: **long waiting lines and inefficient queue management**.
+A full-stack Flask application for managing a real-world service
+queue: students join a virtual line, track their position and
+estimated wait time live, pay a fee, and receive a printable receipt
+— while admins manage the queue, search and page through waiting/
+called students, and view a full student roster with history.
 
-Instead of requiring students to stand in physical queues, the system allows them to join a **virtual queue**, monitor their current position, estimate their waiting time, and complete the payment process in an organized manner.
+Built as a learning-focused portfolio project, developed session by
+session with an emphasis on professional backend practices: clean
+architecture, tested code, and real security considerations (CSRF,
+rate limiting, secure cookies, IDOR protection) rather than just
+getting features working.
 
-This project is being developed as a learning-focused portfolio project to strengthen my skills in **Python, Flask, SQL, full-stack web development, and software engineering** while solving a real-world problem.
+📓 **[Read the full development log](DEVLOG.md)** — day-by-day
+decisions, bugs found, and lessons learned while building this.
 
----
+## Features
 
-## 🎯 Problem Statement
+**For students**
+- Registration, login/logout, "remember me," and a full password
+  reset flow with real email delivery
+- Join the queue and get a unique token
+- Live status page — real position and an ETA computed from actual
+  historical service times, updated via lightweight polling (no
+  page reloads)
+- Simulated fee payment with a printable receipt
+- Full payment history
 
-Traditional college fee payment systems often involve:
+**For admins**
+- Dashboard with searchable, paginated waiting/called queues
+- Call next / mark completed, with status-transition guards against
+  double-actions
+- Full student roster, searchable, with per-student queue/payment
+  history
+- Payment records view
 
-* Long physical queues
-* Time-consuming manual processes
-* Student frustration due to uncertain waiting times
-* Lack of transparency in queue status
-* Inefficient management during peak admission periods
+**Under the hood**
+- CSRF protection on every state-changing form
+- Rate limiting on login, registration, and password reset
+- Secure, scoped cookies (HttpOnly, SameSite, environment-aware Secure)
+- IDOR-safe queries — every user-scoped resource is filtered by
+  ownership, not just by ID
+- Role validation enforced at both the application and database level
+- Branded error pages (400/403/404/429/500) and centralized logging
+- Versioned database migrations (Flask-Migrate/Alembic)
+- Full pytest suite, run automatically on every push via GitHub Actions
 
-The objective of this project is to demonstrate a smarter and more efficient approach using a virtual queue management system.
+## Tech Stack
 
----
+- **Backend:** Flask, Flask-SQLAlchemy, Flask-Migrate, Flask-Login,
+  Flask-WTF, Flask-Mail, Flask-Limiter
+- **Database:** SQLite (development) / PostgreSQL (production-ready)
+- **Testing:** pytest
+- **Server:** gunicorn
+- **CI:** GitHub Actions (tests + flake8 lint on every push)
 
-## 🎯 Project Objectives
+## Screenshots
 
-* Build a virtual queue management system.
-* Allow students to register and log in securely.
-* Generate queue tokens automatically.
-* Display real-time queue positions.
-* Simulate the college fee payment process.
-* Provide an admin dashboard for queue management.
-* Store student and payment records using SQLite.
-* Gain practical experience in full-stack application development.
+<!-- Add screenshots here — student dashboard, live queue status, admin dashboard, receipt view -->
 
----
+## Getting Started
 
-## ✨ Planned Features
+```bash
+git clone https://github.com/<your-username>/<your-repo>.git
+cd <your-repo>
 
-### Student Features
+python -m venv venv
+source venv/bin/activate          # Windows: venv\Scripts\activate
 
-* Student Registration
-* Secure Login
-* Dashboard
-* Join Queue
-* Queue Position Tracking
-* Estimated Waiting Time
-* Fee Payment (Simulation)
-* Payment History
-* Receipt Generation
+pip install -r requirements.txt
 
-### Admin Features
+cp .env.example .env              # then fill in real values — see .env.example for setup notes
 
-* Admin Login
-* View Student Records
-* Manage Queue
-* Call Next Student
-* Complete Queue Requests
-* View Payment Records
+flask db upgrade                  # create the database schema
+flask --app run.py seed-admin admin@example.com "Admin Name"   # create your first admin
 
----
+flask run
+```
 
-## 🛠️ Technology Stack
+Visit `http://127.0.0.1:5000`.
 
-| Category                | Technology            |
-| ----------------------- | --------------------- |
-| Frontend                | HTML, CSS, JavaScript |
-| Backend                 | Python (Flask)        |
-| Database                | SQLite (`sqlite3`)    |
-| Version Control         | Git & GitHub          |
-| Development Environment | Visual Studio Code    |
+## Running Tests
 
----
+```bash
+pip install -r requirements-dev.txt
+pytest -v
+flake8 .
+```
 
-## 📅 30-Day Development Plan
+## Project Structure
 
-### Week 1 — Foundation
+├── app/
+│ ├── admin/ # Admin blueprint — dashboard, students, payments
+│ ├── auth/ # Registration, login, password reset
+│ ├── main/ # Public pages
+│ ├── student/ # Queue, payments, live status
+│ ├── models/ # Student, QueueEntry, Payment
+│ ├── templates/
+│ └── extensions.py # Shared extension instances (db, login_manager, etc.)
+├── migrations/ # Alembic migration history
+├── tests/ # pytest suite
+├── .github/workflows/ # CI pipeline
+├── config.py
+├── run.py
+└── DEPLOYMENT.md # Production deployment checklist
 
-* Project Planning
-* Database Design
-* Flask Setup
-* User Interface
-* Registration
-* Login
-* Initial Testing
+## Deployment
 
-### Week 2 — Queue Management
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for a full production checklist,
+including database, environment variables, and known limitations.
 
-* Queue Database
-* Token Generation
-* Queue Position
-* Queue Logic
-* Admin Queue Panel
-* Testing
+## Roadmap
 
-### Week 3 — Payment Module
+Ideas for a future v2 — not required for this project to be considered
+complete, but documented for anyone building on it:
 
-* Fee Details
-* Payment Form
-* Payment Records
-* Payment History
-* Receipt Generation
-* Testing
+- QR-code-based queue joining
+- Real payment gateway integration
+- SMS alerts alongside email
+- AI-based wait time prediction
+- Analytics dashboard
+- Multi-department support
+- Appointment scheduling
 
-### Week 4 — Finalization
+## License
 
-* Student Dashboard
-* Admin Dashboard
-* UI Improvements
-* Error Handling
-* Documentation
-* GitHub Deployment
-
----
-
-## 📂 Project Structure
-Smart-Queue-Management-System/
-│
-├── 📁 app/
-│   ├── 📁 admin/
-│   ├── 📁 auth/
-│   ├── 📁 main/
-│   ├── 📁 student/
-│   ├── 📁 models/
-│   ├── 📁 static/
-│   │   ├── 📁 css/
-│   │   ├── 📁 js/
-│   │   ├── 📁 images/
-│   │   └── 📁 uploads/
-│   ├── 📁 templates/
-│   ├── 📄 extensions.py
-│   └── 📄 __init__.py
-│
-├── 📄 config.py
-├── 📄 requirements.txt
-├── 📄 run.py
-├── 📄 .gitignore
-├── 📄 README.md
-└── 📄 LICENSE
-
----
-
+MIT — see [LICENSE](LICENSE).
