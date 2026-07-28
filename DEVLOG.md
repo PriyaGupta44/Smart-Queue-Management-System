@@ -448,3 +448,32 @@ Enhance the student queue experience with real-time status updates and accurate,
 * Designing reusable UI components by generalizing pagination instead of duplicating code.
 * Building secure, role-based admin features with searchable, paginated data views and detailed per-user history pages.
 
+
+
+## 📅 Days 18 – Deployment, CI/CD & Final Production Polish
+
+### 🎯 Objective
+
+Prepare the Smart Queue Management System for a production-ready release by making it deployable, automating quality checks with GitHub Actions, and performing a final review before the **v1.0.0** milestone.
+
+### ✅ Tasks Completed
+
+* Added **Gunicorn** (production WSGI server) and **psycopg2-binary** (PostgreSQL driver) to `requirements.txt`.
+* Created a `Procfile` with a migration release step and optimized Gunicorn worker and timeout settings for deployment.
+* Updated the logging configuration to always write to **stdout**, ensuring compatibility with hosting platforms that use ephemeral filesystems.
+* Expanded `.env.example` with production-specific environment variables.
+* Created `DEPLOYMENT.md` containing a complete deployment checklist and documented known production limitations.
+* Added a **GitHub Actions CI pipeline** (`.github/workflows/ci.yml`) that automatically runs **pytest** and **flake8** on every push and pull request.
+* Added `requirements-dev.txt` and `.flake8` to separate development dependencies from production requirements.
+* Included a **GitHub Actions status badge** in the project README.
+* Verified that the automated test suite runs without requiring real secrets by using the self-contained `TestingConfig`.
+* Performed a final project review, cleaned up documentation and project structure, and prepared the project for the **v1.0.0** release.
+
+### 📚 Key Concepts Learned
+
+* Why production deployments require a WSGI server such as Gunicorn instead of Flask's built-in development server.
+* The importance of stdout logging and understanding ephemeral vs. persistent filesystems on cloud hosting platforms.
+* How to document deployment steps and known limitations for maintainability.
+* Building an automated CI pipeline to enforce testing and code quality on every code change.
+* Separating production and development dependencies for cleaner deployments.
+* The value of performing a final review and polish before shipping a stable production release.
