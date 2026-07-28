@@ -113,7 +113,6 @@ See **[DEPLOYMENT.md](DEPLOYMENT.md)** for a full production checklist,
 including database, environment variables, and known limitations.
 
 ## Roadmap
-
 Ideas for a future v2 — not required for this project to be considered
 complete, but documented for anyone building on it:
 
