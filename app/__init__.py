@@ -154,3 +154,38 @@ def register_cli(app):
         db.session.add(admin)
         db.session.commit()
         click.echo(f"Admin account created for {email}.")
+
+
+def configure_logging(app):
+    if app.testing:
+        return
+
+    formatter = logging.Formatter(
+        "%(asctime)s %(levelname)s %(name)s: %(message)s [in %(pathname)s:%(lineno)d]"
+    )
+
+    # Always log to stdout — most hosting platforms (Heroku, Render,
+    # Railway, etc.) capture and centrally aggregate stdout/stderr,
+    # and their filesystems are often ephemeral, so a log FILE alone
+    # would be silently lost on every restart or redeploy there.
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    stream_handler.setLevel(logging.INFO)
+    app.logger.addHandler(stream_handler)
+
+    # Also keep a local rotating file — useful for a traditional VPS
+    # deployment with persistent disk; harmless (just redundant) on
+    # platforms where it won't survive a restart.
+    project_root = os.path.dirname(app.root_path)
+    log_dir = os.path.join(project_root, "logs")
+    os.makedirs(log_dir, exist_ok=True)
+
+    file_handler = RotatingFileHandler(
+        os.path.join(log_dir, "app.log"), maxBytes=1_000_000, backupCount=5
+    )
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+
+    app.logger.setLevel(logging.INFO)
+    app.logger.info("Application startup")
