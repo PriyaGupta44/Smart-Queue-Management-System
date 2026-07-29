@@ -68,7 +68,7 @@ def test_admin_can_call_and_complete_entry(client, db, app):
     resp = client.post(f"/admin/queue/{entry.id}/complete", follow_redirects=True)
     assert resp.status_code == 200
 
-    updated = QueueEntry.query.get(entry.id)
+    updated = db.session.get(QueueEntry, entry.id)
     assert updated.status == QueueEntry.STATUS_COMPLETED
 
 
