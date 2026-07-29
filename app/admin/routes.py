@@ -76,7 +76,9 @@ def dashboard():
 @login_required
 @admin_required
 def call_next(entry_id):
-    entry = QueueEntry.query.get_or_404(entry_id)
+    entry = db.session.get(QueueEntry, entry_id)
+    if entry is None:
+        abort(404)
 
     if entry.status != QueueEntry.STATUS_WAITING:
         flash(f"{entry.token_number} is not waiting and cannot be called.", "warning")
