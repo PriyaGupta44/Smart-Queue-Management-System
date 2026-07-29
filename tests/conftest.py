@@ -78,17 +78,17 @@ def login(client, email="student@example.com", password="password123"):
 def rate_limited_client(app):
     """A test client with rate limiting actually enabled.
 
-    TestingConfig sets RATELIMIT_ENABLED = False so the rest of the
-    suite (which calls register()/login() many times per test file)
-    never gets tripped up by rate limits. This fixture flips
-    enforcement back on just for the tests that specifically need to
-    verify it — and resets any leftover counts first, since
-    Flask-Limiter's in-memory storage is shared across the whole test
-    run, not isolated per app instance.
+    Flask-Limiter only sets up its storage backend if RATELIMIT_ENABLED
+    is True at the moment init_app() runs. Since the `app` fixture is
+    built with RATELIMIT_ENABLED = False (TestingConfig), storage was
+    never created — so we flip the config flag and call init_app()
+    again here, which re-runs that setup now that it's enabled.
     """
     from app.extensions import limiter
 
-    limiter.enabled = True
+    app.config["RATELIMIT_ENABLED"] = True
+    limiter.init_app(app)
     limiter.reset()
     yield app.test_client()
+    app.config["RATELIMIT_ENABLED"] = False
     limiter.enabled = False
