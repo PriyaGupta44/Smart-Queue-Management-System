@@ -19,6 +19,45 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
 
+
+    {% block extra_css %}
+    <style>
+        .password-strength-meter { background:#eee; border-radius:4px; height:6px; margin-top:6px; overflow:hidden; }
+        .password-strength-bar { height:100%; width:0%; transition: width 0.2s ease, background-color 0.2s ease; }
+        .password-strength-text { font-size:0.8rem; color:#666; margin-top:4px; }
+    </style>
+    {% endblock %}
+
+    <!--Javascript Here-->
+    {% block extra_js %}
+<script>
+    const passwordInput = document.getElementById("password");
+    const strengthBar = document.getElementById("password-strength-bar");
+    const strengthText = document.getElementById("password-strength-text");
+
+    function scorePassword(password) {
+        let score = 0;
+        if (password.length >= 8) score++;
+        if (/[A-Z]/.test(password)) score++;
+        if (/[a-z]/.test(password)) score++;
+        if (/[0-9]/.test(password)) score++;
+        if (/[^A-Za-z0-9]/.test(password)) score++;
+        return score;
+    }
+
+    if (passwordInput) {
+        passwordInput.addEventListener("input", () => {
+            const score = scorePassword(passwordInput.value);
+            const labels = ["Very Weak", "Weak", "Fair", "Good", "Strong"];
+            const colors = ["#dc3545", "#dc3545", "#fd7e14", "#ffc107", "#198754"];
+            const index = Math.max(score - 1, 0);
+            strengthBar.style.width = (score * 20) + "%";
+            strengthBar.style.backgroundColor = colors[index];
+            strengthText.textContent = passwordInput.value ? labels[index] : "";
+        });
+    }
+</script>
+{% endblock %}
 </head>
 
 <body>
@@ -215,6 +254,12 @@ Join QueueFlow today
 
 </div>
 {% for error in form.password.errors %}<p class="flash flash-danger">{{ error }}</p>{% endfor %}
+
+<div class="password-strength-meter">
+    <div id="password-strength-bar" class="password-strength-bar"></div>
+</div>
+<p id="password-strength-text" class="password-strength-text"></p>
+{% block extra_css %}
 
 
 <div class="input-box">
