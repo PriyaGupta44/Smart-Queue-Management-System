@@ -43,9 +43,23 @@ def login():
     if form.validate_on_submit():
         student = Student.query.filter_by(email=form.email.data.lower()).first()
 
+        if student is not None and student.is_locked():
+            flash(
+                "This account is temporarily locked due to repeated failed login attempts. "
+                "Please try again later.",
+                "danger",
+            )
+            return render_template("auth/login.html", form=form)
+
         if student is None or not student.check_password(form.password.data):
+            if student is not None:
+                student.register_failed_login()
+                db.session.commit()
             flash("Invalid email or password.", "danger")
             return render_template("auth/login.html", form=form)
+
+        student.register_successful_login()
+        db.session.commit()
 
         login_user(student, remember=form.remember_me.data)
 
