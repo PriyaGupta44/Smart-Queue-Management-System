@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from flask import current_app
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -36,8 +36,9 @@ class Student(UserMixin, db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(20), nullable=False, default=ROLE_STUDENT)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
-
     queue_entries = db.relationship("QueueEntry", backref="student", lazy="dynamic")
+    failed_login_attempts = db.Column(db.Integer, nullable=False, default=0)
+    locked_until = db.Column(db.DateTime, nullable=True)
 
 
     def __init__(self, **kwargs):
@@ -73,6 +74,22 @@ class Student(UserMixin, db.Model):
 
     def check_password(self, raw_password):
         return check_password_hash(self.password_hash, raw_password)
+
+    
+    MAX_FAILED_LOGIN_ATTEMPTS = 5
+    LOCKOUT_DURATION_MINUTES = 15
+
+    def is_locked(self):
+        return self.locked_until is not None and self.locked_until > datetime.now(timezone.utc)
+
+    def register_failed_login(self):
+        self.failed_login_attempts += 1
+        if self.failed_login_attempts >= self.MAX_FAILED_LOGIN_ATTEMPTS:
+            self.locked_until = datetime.now(timezone.utc) + timedelta(minutes=self.LOCKOUT_DURATION_MINUTES)
+
+    def register_successful_login(self):
+        self.failed_login_attempts = 0
+        self.locked_until = None
 
     @property
     def is_admin(self):
