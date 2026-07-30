@@ -53,7 +53,7 @@ def _csrf_token(client, get_url):
     return match.group(1).decode() if match else None
 
 
-def register(client, email="student@example.com", password="password123", full_name="Test Student"):
+def register(client, email="student@example.com", password="Password123!", full_name="Test Student"):
     data = {
         "full_name": full_name,
         "email": email,
@@ -66,7 +66,7 @@ def register(client, email="student@example.com", password="password123", full_n
     return client.post("/auth/register", data=data, follow_redirects=True)
 
 
-def login(client, email="student@example.com", password="password123"):
+def login(client, email="student@example.com", password="Password123!"):
     data = {"email": email, "password": password}
     token = _csrf_token(client, "/auth/login")
     if token:
