@@ -70,14 +70,14 @@ def test_reset_password_with_valid_token_changes_password(client, app, db):
 
     response = client.post(
         f"/auth/reset-password/{token}",
-        data={"password": "newpassword456", "confirm_password": "newpassword456"},
+        data={"password": "NewPass456!", "confirm_password": "NewPass456!"},
         follow_redirects=True,
     )
 
     assert response.status_code == 200
     with app.app_context():
         updated = Student.query.filter_by(email="reset@example.com").first()
-        assert updated.check_password("newpassword456")
+        assert updated.check_password("NewPass456!")
         assert not updated.check_password("oldpassword123")
 
 
