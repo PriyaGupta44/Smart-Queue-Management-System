@@ -84,6 +84,7 @@ class Student(UserMixin, db.Model):
         if self.locked_until is None:
             return False
         locked_until = self.locked_until
+        
         if locked_until.tzinfo is None:
             # SQLite strips timezone info on round-trip — we always
             # store this as UTC, so it's safe to reattach it here

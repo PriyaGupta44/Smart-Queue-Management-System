@@ -32,3 +32,4 @@ class ProfileForm(FlaskForm):
         ],
     )
     submit = SubmitField("Save Changes")
+    
