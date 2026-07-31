@@ -101,6 +101,7 @@ class Student(UserMixin, db.Model):
     def register_successful_login(self):
         self.failed_login_attempts = 0
         self.locked_until = None
+        self.last_login_at = datetime.now(timezone.utc)
 
     @property
     def is_admin(self):
