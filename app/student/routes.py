@@ -203,3 +203,19 @@ def profile():
         flash("Profile updated.", "success")
         return redirect(url_for("student.profile"))
     return render_template("student/profile.html", form=form)
+
+@student_bp.route("/profile/change-password", methods=["GET", "POST"])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
+        if not current_user.check_password(form.current_password.data):
+            flash("Current password is incorrect.", "danger")
+            return render_template("student/change_password.html", form=form)
+
+        current_user.set_password(form.new_password.data)
+        db.session.commit()
+        flash("Password changed successfully.", "success")
+        return redirect(url_for("student.profile"))
+
+    return render_template("student/change_password.html", form=form)
