@@ -19,18 +19,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
 
-
-    {% block extra_css %}
     <style>
         .password-strength-meter { background:#eee; border-radius:4px; height:6px; margin-top:6px; overflow:hidden; }
         .password-strength-bar { height:100%; width:0%; transition: width 0.2s ease, background-color 0.2s ease; }
         .password-strength-text { font-size:0.8rem; color:#666; margin-top:4px; }
     </style>
-    {% endblock %}
 
     <!--Javascript Here-->
-    {% block extra_js %}
-<script>
+    <script>
     const passwordInput = document.getElementById("password");
     const strengthBar = document.getElementById("password-strength-bar");
     const strengthText = document.getElementById("password-strength-text");
@@ -56,8 +52,7 @@
             strengthText.textContent = passwordInput.value ? labels[index] : "";
         });
     }
-</script>
-{% endblock %}
+    </script>
 </head>
 
 <body>
@@ -259,8 +254,6 @@ Join QueueFlow today
     <div id="password-strength-bar" class="password-strength-bar"></div>
 </div>
 <p id="password-strength-text" class="password-strength-text"></p>
-{% block extra_css %}
-
 
 <div class="input-box">
 
