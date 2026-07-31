@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}My Profile — Queue Management System{% endblock %}
+
+{% block content %}
+<h1>My Profile</h1>
+
+<div class="card">
+    <p><strong>Email:</strong> {{ current_user.email }}</p>
+    <p><strong>Account created:</strong> {{ current_user.created_at.strftime('%d %b %Y') if current_user.created_at else '—' }}</p>
+
+    <form method="POST" action="{{ url_for('student.profile') }}" style="margin-top:16px;">
+        {{ form.hidden_tag() }}
+        <div class="input-box">
+            {{ form.full_name(placeholder="Full Name") }}
+        </div>
+        {% for error in form.full_name.errors %}<p class="flash flash-danger">{{ error }}</p>{% endfor %}
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+
+    <p style="margin-top:16px;">
+        <a href="{{ url_for('student.change_password') }}">Change Password →</a>
+    </p>
+</div>
+{% endblock %}

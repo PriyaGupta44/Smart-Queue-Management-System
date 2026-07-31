@@ -6,6 +6,7 @@ from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 from flask import Blueprint, render_template, redirect, url_for, flash, jsonify
 
+from app.student.forms import ProfileForm, ChangePasswordForm
 from app.extensions import db
 from app.models.queue import QueueEntry
 from app.models.payment import Payment
@@ -190,3 +191,15 @@ def receipt(payment_id):
         .first_or_404()
     )
     return render_template("student/receipt.html", payment=payment)
+
+
+@student_bp.route("/profile", methods=["GET", "POST"])
+@login_required
+def profile():
+    form = ProfileForm(obj=current_user)
+    if form.validate_on_submit():
+        current_user.full_name = form.full_name.data
+        db.session.commit()
+        flash("Profile updated.", "success")
+        return redirect(url_for("student.profile"))
+    return render_template("student/profile.html", form=form)
