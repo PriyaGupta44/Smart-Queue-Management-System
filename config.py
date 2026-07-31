@@ -58,6 +58,10 @@ class Config:
         requirements (see ProductionConfig below)."""
         pass
 
+    PERMANENT_SESSION_LIFETIME = timedelta(
+        minutes=int(os.environ.get("SESSION_IDLE_TIMEOUT_MINUTES", 30))
+    )
+
 
 class DevelopmentConfig(Config):
     DEBUG = True

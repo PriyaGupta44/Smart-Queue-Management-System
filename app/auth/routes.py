@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, current_
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_mail import Message
 
+from flask import Blueprint, render_template, redirect, url_for, flash, current_app, session
 from app.extensions import db, mail, limiter
 from app.models.student import Student
 from app.auth.forms import RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
@@ -60,6 +61,18 @@ def login():
 
         student.register_successful_login()
         db.session.commit()
+
+        login_user(student, remember=form.remember_me.data)
+        student.register_successful_login()
+        db.session.commit()
+
+        # Marks this session as permanent, so PERMANENT_SESSION_LIFETIME
+        # applies. Flask refreshes the expiry on every request by
+        # default (SESSION_REFRESH_EACH_REQUEST), so this behaves as an
+        # idle timeout — 30 minutes of inactivity logs the user out,
+        # not 30 minutes total. "Remember Me" (below) uses a separate,
+        # longer-lived cookie that can re-authenticate past this.
+        session.permanent = True
 
         login_user(student, remember=form.remember_me.data)
 
