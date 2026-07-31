@@ -37,8 +37,9 @@ class Student(UserMixin, db.Model):
     role = db.Column(db.String(20), nullable=False, default=ROLE_STUDENT)
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     queue_entries = db.relationship("QueueEntry", backref="student", lazy="dynamic")
-    failed_login_attempts = db.Column(db.Integer, nullable=False, default=0)
+    failed_login_attempts = db.Column(db.Integer, nullable=False, default=0, server_default="0")
     locked_until = db.Column(db.DateTime, nullable=True)
+    avatar_filename = db.Column(db.String(255), nullable=True)
 
 
     def __init__(self, **kwargs):
@@ -80,7 +81,15 @@ class Student(UserMixin, db.Model):
     LOCKOUT_DURATION_MINUTES = 15
 
     def is_locked(self):
-        return self.locked_until is not None and self.locked_until > datetime.now(timezone.utc)
+        if self.locked_until is None:
+            return False
+        locked_until = self.locked_until
+        if locked_until.tzinfo is None:
+            # SQLite strips timezone info on round-trip — we always
+            # store this as UTC, so it's safe to reattach it here
+            # before comparing against a timezone-aware "now".
+            locked_until = locked_until.replace(tzinfo=timezone.utc)
+        return locked_until > datetime.now(timezone.utc)
 
     def register_failed_login(self):
         self.failed_login_attempts += 1

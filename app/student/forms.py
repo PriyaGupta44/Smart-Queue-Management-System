@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, EqualTo
+from flask_wtf.file import FileField, FileAllowed, FileSize
 
 from app.auth.forms import validate_password_strength
 
@@ -20,3 +21,14 @@ class ChangePasswordForm(FlaskForm):
         validators=[DataRequired(), EqualTo("new_password", message="Passwords must match.")],
     )
     submit = SubmitField("Change Password")
+
+class ProfileForm(FlaskForm):
+    full_name = StringField("Full Name", validators=[DataRequired(), Length(max=120)])
+    avatar = FileField(
+        "Profile Picture",
+        validators=[
+            FileAllowed(["jpg", "jpeg", "png"], "Only JPG and PNG images are allowed."),
+            FileSize(max_size=2 * 1024 * 1024, message="Image must be under 2MB."),
+        ],
+    )
+    submit = SubmitField("Save Changes")

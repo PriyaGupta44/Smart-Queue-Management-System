@@ -10,7 +10,7 @@ def test_register_creates_student(client, db):
     student = Student.query.filter_by(email="student@example.com").first()
     assert student is not None
     assert student.role == "student"
-    assert student.check_password("password123")
+    assert student.check_password("Password123!")
 
 
 def test_register_duplicate_email_rejected(client):

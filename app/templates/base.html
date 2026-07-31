@@ -40,17 +40,13 @@
             </nav>
             <div class="nav-buttons">
                 {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('student.profile') }}" class="btn btn-outline">Profile</a>
                     <span class="welcome-name">Hi, {{ current_user.full_name.split(' ')[0] }}</span>
                     <a href="{{ url_for('auth.logout') }}" class="btn btn-outline">Logout</a>
                 {% else %}
                     <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Login</a>
                     <a href="{{ url_for('auth.register') }}" class="btn btn-outline">Register</a>
                 {% endif %}
-                {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('student.profile') }}" class="btn btn-outline">Profile</a>
-                    <span class="welcome-name">Hi, {{ current_user.full_name.split(' ')[0] }}</span>
-                    <a href="{{ url_for('auth.logout') }}" class="btn btn-outline">Logout</a>
-                {% else %}
             </div>
         </div>
     </header>

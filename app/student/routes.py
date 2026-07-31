@@ -1,10 +1,13 @@
+import os
+from werkzeug.utils import secure_filename
+
 from datetime import datetime, timezone
 import random
 
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
-from flask import Blueprint, render_template, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, current_app
 
 from app.student.forms import ProfileForm, ChangePasswordForm
 from app.extensions import db
@@ -199,6 +202,14 @@ def profile():
     form = ProfileForm(obj=current_user)
     if form.validate_on_submit():
         current_user.full_name = form.full_name.data
+
+        if form.avatar.data:
+            filename = f"{current_user.id}_{secure_filename(form.avatar.data.filename)}"
+            upload_dir = os.path.join(current_app.root_path, "static", "uploads", "avatars")
+            os.makedirs(upload_dir, exist_ok=True)
+            form.avatar.data.save(os.path.join(upload_dir, filename))
+            current_user.avatar_filename = filename
+
         db.session.commit()
         flash("Profile updated.", "success")
         return redirect(url_for("student.profile"))
