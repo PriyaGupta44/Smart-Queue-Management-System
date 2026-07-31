@@ -50,4 +50,34 @@ def test_change_password_succeeds_with_correct_current_password(client, db, app)
     with app.app_context():
         student = Student.query.filter_by(email="pwuser2@example.com").first()
         assert student.check_password("BrandNew1!")
-        
+
+def test_last_login_updates_on_successful_login(client, db, app):
+    register(client, email="lastlogin@example.com")
+    client.get("/auth/logout")
+
+    client.post(
+        "/auth/login",
+        data={"email": "lastlogin@example.com", "password": "Password123!"},
+        follow_redirects=True,
+    )
+
+    with app.app_context():
+        student = Student.query.filter_by(email="lastlogin@example.com").first()
+        assert student.last_login_at is not None
+
+
+def test_avatar_upload_rejects_disallowed_file_type(client, db):
+    import io
+
+    register(client, email="avataruser@example.com")
+    login(client, email="avataruser@example.com")
+
+    data = {
+        "full_name": "Avatar User",
+        "avatar": (io.BytesIO(b"not a real image"), "malicious.exe"),
+    }
+    response = client.post(
+        "/student/profile", data=data, content_type="multipart/form-data", follow_redirects=True
+    )
+
+    assert b"Only JPG and PNG" in response.data
