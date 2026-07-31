@@ -40,6 +40,7 @@ class Student(UserMixin, db.Model):
     failed_login_attempts = db.Column(db.Integer, nullable=False, default=0, server_default="0")
     locked_until = db.Column(db.DateTime, nullable=True)
     avatar_filename = db.Column(db.String(255), nullable=True)
+    last_login_at = db.Column(db.DateTime, nullable=True)
 
 
     def __init__(self, **kwargs):
@@ -84,7 +85,7 @@ class Student(UserMixin, db.Model):
         if self.locked_until is None:
             return False
         locked_until = self.locked_until
-        
+
         if locked_until.tzinfo is None:
             # SQLite strips timezone info on round-trip — we always
             # store this as UTC, so it's safe to reattach it here
