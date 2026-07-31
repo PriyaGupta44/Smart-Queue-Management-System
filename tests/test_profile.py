@@ -50,3 +50,4 @@ def test_change_password_succeeds_with_correct_current_password(client, db, app)
     with app.app_context():
         student = Student.query.filter_by(email="pwuser2@example.com").first()
         assert student.check_password("BrandNew1!")
+        
