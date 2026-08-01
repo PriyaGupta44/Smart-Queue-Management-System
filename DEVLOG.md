@@ -477,3 +477,25 @@ Prepare the Smart Queue Management System for a production-ready release by maki
 * Building an automated CI pipeline to enforce testing and code quality on every code change.
 * Separating production and development dependencies for cleaner deployments.
 * The value of performing a final review and polish before shipping a stable production release.
+
+## 📅 Day 19 – Password Strength & Account Lockout
+
+Added a custom WTForms validator requiring uppercase, lowercase,
+digit, and special character on registration and reset passwords;
+added a live client-side strength indicator; added
+`failed_login_attempts`/`locked_until` to `Student` with a 5-attempt,
+15-minute lockout enforced in `login()`.
+
+## 📅 Day 20 – Session Timeout & Profile Management
+
+Added `PERMANENT_SESSION_LIFETIME` with `session.permanent = True` on
+login for a 30-minute idle timeout. Added `/student/profile` (edit
+full name, view account creation date) and a separate
+`/student/profile/change-password` flow requiring current-password
+confirmation.
+
+## 📅 Day 21 – Avatar Upload & Last Login Tracking
+
+Added profile picture upload (JPG/PNG, 2MB max, validated via
+Flask-WTF's FileAllowed/FileSize) and `last_login_at` tracking,
+surfaced on the profile page.
