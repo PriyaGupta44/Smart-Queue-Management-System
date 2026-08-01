@@ -43,6 +43,10 @@
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="btn-sm btn-complete">Mark Completed</button>
                     </form>
+                    <form method="POST" action="{{ url_for('admin.skip', entry_id=entry.id) }}" style="display:inline;" data-confirm="Mark {{ entry.token_number }} as a no-show?">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn-sm btn-outline">Skip</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
