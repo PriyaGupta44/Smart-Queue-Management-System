@@ -21,6 +21,13 @@
             <a href="{{ url_for('student.queue_status') }}" class="btn btn-primary">View live status</a>
         </p>
 
+        {% if entry.status == 'waiting' %}
+        <form method="POST" action="{{ url_for('student.cancel_queue') }}" style="margin-top:10px;" data-confirm="Cancel your queue token? This cannot be undone.">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn-sm btn-outline">Cancel Token</button>
+        </form>
+        {% endif %}
+
         {% if not entry.payment or entry.payment.status != 'success' %}
             <form method="POST" action="{{ url_for('student.pay', entry_id=entry.id) }}" style="margin-top:14px;">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
