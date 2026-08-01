@@ -173,3 +173,19 @@ def skip(entry_id):
     db.session.commit()
     flash(f"{entry.token_number} marked as skipped (no-show).", "warning")
     return redirect(url_for("admin.dashboard"))
+
+@admin_bp.route("/queue/<int:entry_id>/recall", methods=["POST"])
+@login_required
+@admin_required
+def recall(entry_id):
+    entry = QueueEntry.query.get_or_404(entry_id)
+
+    if entry.status != QueueEntry.STATUS_SKIPPED:
+        flash(f"{entry.token_number} is not skipped and cannot be recalled.", "warning")
+        return redirect(url_for("admin.dashboard"))
+
+    entry.status = QueueEntry.STATUS_CALLED
+    entry.called_at = datetime.now(timezone.utc)
+    db.session.commit()
+    flash(f"{entry.token_number} recalled.", "success")
+    return redirect(url_for("admin.dashboard"))
