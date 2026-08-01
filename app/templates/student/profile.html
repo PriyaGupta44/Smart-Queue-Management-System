@@ -29,8 +29,9 @@
         {{ form.submit(class="btn btn-primary") }}
     </form>
 
-    <p style="margin-top:16px;">
+    <p style="display: flex; justify-content: space-between; margin-top: 16px;">
         <a href="{{ url_for('student.change_password') }}">Change Password →</a>
+        <a href="{{ url_for('student.dashboard') }}">Back to Dashboard</a>
     </p>
 </div>
 {% endblock %}
