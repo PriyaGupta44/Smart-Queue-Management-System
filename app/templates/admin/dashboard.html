@@ -13,8 +13,9 @@
 
 {% block content %}
 <h1>Admin Dashboard</h1>
-<p style="margin-top:-0px; margin-bottom:16px;">
+<p style="display: flex; justify-content: space-between; margin-top: -0px; margin-bottom:16px;">
     <a href="{{ url_for('admin.students') }}">View All Students →</a>
+    <a href="{{ url_for('admin.stats') }}">View Statistics →</a>
 </p>
 
 <form method="GET" action="{{ url_for('admin.dashboard') }}" class="search-form">
