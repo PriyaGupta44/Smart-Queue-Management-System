@@ -1,5 +1,5 @@
 from functools import wraps
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from flask import Blueprint, render_template, redirect, url_for, flash, abort, request
 from flask_login import login_required, current_user
@@ -199,3 +199,36 @@ def recall(entry_id):
     db.session.commit()
     flash(f"{entry.token_number} recalled.", "success")
     return redirect(url_for("admin.dashboard"))
+
+
+@admin_bp.route("/stats")
+@login_required
+@admin_required
+def stats():
+    today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+
+    total_students = Student.query.filter_by(role=Student.ROLE_STUDENT).count()
+    active_queue = QueueEntry.query.filter(
+        QueueEntry.status.in_([QueueEntry.STATUS_WAITING, QueueEntry.STATUS_CALLED])
+    ).count()
+    completed_today = QueueEntry.query.filter(
+        QueueEntry.status == QueueEntry.STATUS_COMPLETED,
+        QueueEntry.completed_at >= today_start,
+    ).count()
+    avg_wait_minutes = round(QueueEntry.average_service_minutes(), 1)
+
+    week_ago = datetime.now(timezone.utc) - timedelta(days=7)
+    recent_entries = QueueEntry.query.filter(QueueEntry.created_at >= week_ago).all()
+    hourly_counts = [0] * 24
+    for entry in recent_entries:
+        if entry.created_at:
+            hourly_counts[entry.created_at.hour] += 1
+
+    return render_template(
+        "admin/stats.html",
+        total_students=total_students,
+        active_queue=active_queue,
+        completed_today=completed_today,
+        avg_wait_minutes=avg_wait_minutes,
+        hourly_counts=hourly_counts,
+    )
