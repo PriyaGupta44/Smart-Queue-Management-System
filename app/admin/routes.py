@@ -62,6 +62,16 @@ def dashboard():
         page=called_page, per_page=DASHBOARD_PER_PAGE, error_out=False
     )
 
+    # New for Day 30 (Commit 3): fetch skipped entries so the dashboard
+    # can show a "Skipped — Needs Recall" section. Deliberately NOT
+    # paginated — see the note in the original instructions about why.
+    skipped_entries = (
+        QueueEntry.query.join(Student)
+        .filter(QueueEntry.status == QueueEntry.STATUS_SKIPPED)
+        .order_by(QueueEntry.created_at.asc())
+        .all()
+    )
+
     return render_template(
         "admin/dashboard.html",
         waiting=waiting_pagination.items,
@@ -69,8 +79,8 @@ def dashboard():
         waiting_pagination=waiting_pagination,
         called_pagination=called_pagination,
         search=search,
+        skipped=skipped_entries,
     )
-
 
 @admin_bp.route("/queue/<int:entry_id>/call", methods=["POST"])
 @login_required
