@@ -25,6 +25,29 @@
     {% endif %}
 </form>
 
+{% if skipped %}
+<div class="card">
+    <h2>Skipped — Needs Recall ({{ skipped|length }})</h2>
+    <table class="qtable">
+        <thead><tr><th>Token</th><th>Student</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for entry in skipped %}
+            <tr>
+                <td>{{ entry.token_number }}</td>
+                <td>{{ entry.student.full_name }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('admin.recall', entry_id=entry.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn-sm btn-outline">Recall</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
 <div class="card">
     <h2>Called ({{ called_pagination.total }})</h2>
     {% if called %}
