@@ -31,3 +31,22 @@ class QueueEntry(db.Model):
 
     def __repr__(self):
         return f"<QueueEntry {self.token_number} ({self.status})>"
+
+@classmethod
+def average_service_minutes(cls):
+        """Real average service time from the last 20 completed
+        entries. Falls back to 5.0 minutes when there's no history."""
+        recent_completed = (
+            cls.query.filter(
+                cls.status == cls.STATUS_COMPLETED,
+                cls.called_at.isnot(None),
+                cls.completed_at.isnot(None),
+            )
+            .order_by(cls.completed_at.desc())
+            .limit(20)
+            .all()
+        )
+        if not recent_completed:
+            return 5.0
+        total_seconds = sum((e.completed_at - e.called_at).total_seconds() for e in recent_completed)
+        return max((total_seconds / len(recent_completed)) / 60, 1.0)
