@@ -16,6 +16,7 @@ class QueueEntry(db.Model):
     STATUS_CALLED = "called"
     STATUS_COMPLETED = "completed"
     STATUS_CANCELLED = "cancelled"
+    STATUS_SKIPPED = "skipped"
 
     id = db.Column(db.Integer, primary_key=True)
     token_number = db.Column(db.String(20), unique=True, nullable=False)
