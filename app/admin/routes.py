@@ -156,3 +156,20 @@ def student_detail(student_id):
         .all()
     )
     return render_template("admin/student_detail.html", student=student, entries=entries)
+
+
+
+@admin_bp.route("/queue/<int:entry_id>/skip", methods=["POST"])
+@login_required
+@admin_required
+def skip(entry_id):
+    entry = QueueEntry.query.get_or_404(entry_id)
+
+    if entry.status != QueueEntry.STATUS_CALLED:
+        flash(f"{entry.token_number} must be called before it can be skipped.", "warning")
+        return redirect(url_for("admin.dashboard"))
+
+    entry.status = QueueEntry.STATUS_SKIPPED
+    db.session.commit()
+    flash(f"{entry.token_number} marked as skipped (no-show).", "warning")
+    return redirect(url_for("admin.dashboard"))
