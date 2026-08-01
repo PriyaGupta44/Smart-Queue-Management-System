@@ -230,3 +230,20 @@ def change_password():
         return redirect(url_for("student.profile"))
 
     return render_template("student/change_password.html", form=form)
+
+
+@student_bp.route("/queue/cancel", methods=["POST"])
+@login_required
+def cancel_queue():
+    # Only a WAITING entry can be self-cancelled — once called, the
+    # student needs to actually show up or let it lapse; cancelling
+    # mid-service would leave the admin flow in a confusing state.
+    entry = current_user.queue_entries.filter_by(status=QueueEntry.STATUS_WAITING).first()
+    if not entry:
+        flash("You don't have a waiting token to cancel.", "warning")
+        return redirect(url_for("student.dashboard"))
+
+    entry.status = QueueEntry.STATUS_CANCELLED
+    db.session.commit()
+    flash(f"Token {entry.token_number} has been cancelled.", "info")
+    return redirect(url_for("student.dashboard"))
