@@ -3,13 +3,6 @@ from app.extensions import db
 
 
 class QueueEntry(db.Model):
-    """
-    One token/ticket a student holds. `position` is recalculated
-    whenever entries ahead of it are completed or cancelled, rather
-    than stored as a fixed number forever — see
-    app/student/routes.py for how position is derived.
-    """
-
     __tablename__ = "queue_entries"
 
     STATUS_WAITING = "waiting"
@@ -29,11 +22,8 @@ class QueueEntry(db.Model):
 
     payment = db.relationship("Payment", backref="queue_entry", uselist=False)
 
-    def __repr__(self):
-        return f"<QueueEntry {self.token_number} ({self.status})>"
-
-@classmethod
-def average_service_minutes(cls):
+    @classmethod
+    def average_service_minutes(cls):
         """Real average service time from the last 20 completed
         entries. Falls back to 5.0 minutes when there's no history."""
         recent_completed = (
@@ -50,3 +40,6 @@ def average_service_minutes(cls):
             return 5.0
         total_seconds = sum((e.completed_at - e.called_at).total_seconds() for e in recent_completed)
         return max((total_seconds / len(recent_completed)) / 60, 1.0)
+
+    def __repr__(self):
+        return f"<QueueEntry {self.token_number} ({self.status})>"
