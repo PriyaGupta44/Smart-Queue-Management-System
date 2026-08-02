@@ -73,7 +73,27 @@
     </main>
 
     {% include "footer.html" ignore missing %}
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const dataEl = document.getElementById("flash-data");
+            if (!dataEl) return;
+            const messages = JSON.parse(dataEl.textContent);
+            const container = document.getElementById("toast-container");
 
+            messages.forEach(([category, message], index) => {
+                const toast = document.createElement("div");
+                toast.className = "toast toast-" + category;
+                toast.textContent = message;
+                container.appendChild(toast);
+
+                setTimeout(() => toast.classList.add("show"), 50 + index * 100);
+                setTimeout(() => {
+                    toast.classList.remove("show");
+                    setTimeout(() => toast.remove(), 300);
+                }, 4000 + index * 100);
+            });
+        });
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
