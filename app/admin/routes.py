@@ -270,3 +270,26 @@ def export_students_csv():
         mimetype="text/csv",
         headers={"Content-Disposition": "attachment; filename=students.csv"},
     )
+
+
+@admin_bp.route("/export/payments.csv")
+@login_required
+@admin_required
+def export_payments_csv():
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["Receipt", "Token", "Student", "Amount", "Status", "Paid At"])
+    for payment in Payment.query.order_by(Payment.created_at.desc()).all():
+        writer.writerow([
+            payment.receipt_number or "",
+            payment.queue_entry.token_number,
+            payment.queue_entry.student.full_name,
+            payment.amount,
+            payment.status,
+            payment.paid_at.strftime("%Y-%m-%d %H:%M") if payment.paid_at else "",
+        ])
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=payments.csv"},
+    )
