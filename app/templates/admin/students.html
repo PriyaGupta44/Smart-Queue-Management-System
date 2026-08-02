@@ -13,6 +13,7 @@
 <h1>Students ({{ pagination.total }})</h1>
 
 <form method="GET" action="{{ url_for('admin.students') }}" class="search-form">
+    <a href="{{ url_for('admin.export_students_csv') }}" class="btn btn-outline">Export CSV</a>
     <input type="text" name="q" value="{{ search }}" placeholder="Search by name or email...">
     <button type="submit" class="btn btn-primary">Search</button>
     {% if search %}
