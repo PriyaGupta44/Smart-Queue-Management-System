@@ -1,0 +1,7 @@
+Hi {{ entry.student.full_name }},
+
+Your token {{ entry.token_number }} has just been called. Please proceed to the counter now.
+
+If you're unable to make it right away, please let a staff member know as soon as possible.
+
+— Queue Management System

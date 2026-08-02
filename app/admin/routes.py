@@ -109,6 +109,7 @@ def call_next(entry_id):
     entry.status = QueueEntry.STATUS_CALLED
     entry.called_at = datetime.now(timezone.utc)
     db.session.commit()
+    _send_token_called_email(entry)
     flash(f"Called {entry.token_number}.", "success")
     return redirect(url_for("admin.dashboard"))
 
@@ -209,6 +210,7 @@ def recall(entry_id):
     entry.status = QueueEntry.STATUS_CALLED
     entry.called_at = datetime.now(timezone.utc)
     db.session.commit()
+    _send_token_called_email(entry)
     flash(f"{entry.token_number} recalled.", "success")
     return redirect(url_for("admin.dashboard"))
 
