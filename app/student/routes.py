@@ -211,6 +211,7 @@ def change_password():
 
         current_user.set_password(form.new_password.data)
         db.session.commit()
+        _send_password_changed_email(current_user)
         flash("Password changed successfully.", "success")
         return redirect(url_for("student.profile"))
 
