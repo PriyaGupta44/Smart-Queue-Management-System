@@ -3,7 +3,7 @@
 
 {% block content %}
 <h1>Payment Records</h1>
-
+<a href="{{ url_for('admin.export_payments_csv') }}" class="btn btn-outline">Export CSV</a>
 <div class="card">
     {% if payments %}
     <table class="qtable">
