@@ -93,6 +93,13 @@
                 }, 4000 + index * 100);
             });
         });
+        // Generic confirm-before-submit for any form with data-confirm="..."
+        document.addEventListener("submit", (event) => {
+            const form = event.target;
+            if (form.dataset.confirm && !window.confirm(form.dataset.confirm)) {
+                event.preventDefault();
+            }
+        });
     </script>
     {% block extra_js %}{% endblock %}
 </body>
