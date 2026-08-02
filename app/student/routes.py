@@ -8,9 +8,10 @@ from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, current_app
+from flask_mail import Message
 
 from app.student.forms import ProfileForm, ChangePasswordForm
-from app.extensions import db
+from app.extensions import db, mail
 from app.models.queue import QueueEntry
 from app.models.payment import Payment
 
@@ -18,6 +19,16 @@ student_bp = Blueprint("student", __name__)
 
 MAX_TOKEN_GENERATION_ATTEMPTS = 5
 
+def _send_password_changed_email(student):
+    message = Message(
+        subject="Your password was changed",
+        recipients=[student.email],
+        body=render_template("email/password_changed.txt", student=student),
+    )
+    try:
+        mail.send(message)
+    except Exception:
+        current_app.logger.exception("Failed to send password-changed email to %s", student.email)
 
 def _generate_token_number():
     today = datetime.now(timezone.utc).strftime("%Y%m%d")
