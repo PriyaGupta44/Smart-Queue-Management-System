@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Statistics — Queue Management System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap:16px; margin-bottom:20px; }
+    .stat-card { text-align:center; }
+    .stat-card h3 { font-size:2rem; margin:0; color:#4f46e5; }
+    .stat-card p { color:#666; margin:6px 0 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Dashboard Statistics</h1>
+
+<div class="stats-grid">
+    <div class="card stat-card"><h3>{{ total_students }}</h3><p>Total Students</p></div>
+    <div class="card stat-card"><h3>{{ active_queue }}</h3><p>Active Queue</p></div>
+    <div class="card stat-card"><h3>{{ completed_today }}</h3><p>Completed Today</p></div>
+    <div class="card stat-card"><h3>{{ avg_wait_minutes }} min</h3><p>Avg Wait (recent)</p></div>
+</div>
+
+<div class="card">
+    <h2>Queue Activity by Hour (Last 7 Days)</h2>
+    <canvas id="hourlyChart" height="90"></canvas>
+</div>
+
+<p style="margin-top:16px;"><a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline">Back to Dashboard</a></p>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script>
+    const hourlyCounts = {{ hourly_counts|tojson }};
+    new Chart(document.getElementById("hourlyChart"), {
+        type: "bar",
+        data: {
+            labels: Array.from({length: 24}, (_, i) => i + ":00"),
+            datasets: [{ label: "Queue Joins", data: hourlyCounts, backgroundColor: "#4f46e5" }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+</script>
+{% endblock %}
