@@ -1,3 +1,7 @@
+import csv
+import io
+from flask import Response
+
 from functools import wraps
 from datetime import datetime, timedelta, timezone
 
@@ -245,4 +249,24 @@ def stats():
         completed_today=completed_today,
         avg_wait_minutes=avg_wait_minutes,
         hourly_counts=hourly_counts,
+    )
+
+
+@admin_bp.route("/export/students.csv")
+@login_required
+@admin_required
+def export_students_csv():
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["Name", "Email", "Registered On"])
+    for student in Student.query.filter_by(role=Student.ROLE_STUDENT).order_by(Student.created_at).all():
+        writer.writerow([
+            student.full_name,
+            student.email,
+            student.created_at.strftime("%Y-%m-%d") if student.created_at else "",
+        ])
+    return Response(
+        output.getvalue(),
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=students.csv"},
     )
