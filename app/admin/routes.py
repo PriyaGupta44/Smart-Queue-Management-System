@@ -1,11 +1,12 @@
 from functools import wraps
 from datetime import datetime, timedelta, timezone
 
-from flask import Blueprint, render_template, redirect, url_for, flash, abort, request
+from flask import Blueprint, render_template, redirect, url_for, flash, abort, request, current_app
 from flask_login import login_required, current_user
 from sqlalchemy import or_
+from flask_mail import Message
 
-from app.extensions import db
+from app.extensions import db, mail
 from app.models.queue import QueueEntry
 from app.models.payment import Payment
 from app.models.student import Student
@@ -23,6 +24,17 @@ def admin_required(view_func):
         return view_func(*args, **kwargs)
 
     return wrapped
+
+def _send_token_called_email(entry):
+    message = Message(
+        subject=f"Your token {entry.token_number} has been called",
+        recipients=[entry.student.email],
+        body=render_template("email/token_called.txt", entry=entry),
+    )
+    try:
+        mail.send(message)
+    except Exception:
+        current_app.logger.exception("Failed to send token-called email to %s", entry.student.email)
 
 
 @admin_bp.route("/dashboard")
