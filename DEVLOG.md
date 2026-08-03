@@ -513,3 +513,10 @@ Added `/admin/stats`: total students, active queue, completed today,
 average wait time, and an hourly activity chart (Chart.js) over the
 last 7 days. Consolidated ETA math into `QueueEntry.average_service_minutes()`,
 used by both the student ETA (Day 21) and this new dashboard.
+
+## 📅 Day 31 – Toast Notifications & Email Alerts
+
+Flash messages now render as auto-dismissing toasts instead of static
+banners. Destructive actions (cancel, skip) require a confirmation
+dialog. Students receive an email when their token is called and when
+their password is changed.
