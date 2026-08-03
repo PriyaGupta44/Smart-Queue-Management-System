@@ -505,3 +505,11 @@ surfaced on the profile page.
 Students can now cancel their own waiting token. Admins can mark a
 called entry as skipped (no-show) and later recall it — refreshing
 `called_at` and re-announcing the token.
+
+
+## 📅 Day 30 – Admin Statistics Dashboard
+
+Added `/admin/stats`: total students, active queue, completed today,
+average wait time, and an hourly activity chart (Chart.js) over the
+last 7 days. Consolidated ETA math into `QueueEntry.average_service_minutes()`,
+used by both the student ETA (Day 21) and this new dashboard.
