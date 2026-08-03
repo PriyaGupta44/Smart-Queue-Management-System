@@ -499,3 +499,9 @@ confirmation.
 Added profile picture upload (JPG/PNG, 2MB max, validated via
 Flask-WTF's FileAllowed/FileSize) and `last_login_at` tracking,
 surfaced on the profile page.
+
+## 📅 Day 22 – Queue Lifecycle: Cancel, Skip, Recall
+
+Students can now cancel their own waiting token. Admins can mark a
+called entry as skipped (no-show) and later recall it — refreshing
+`called_at` and re-announcing the token.
