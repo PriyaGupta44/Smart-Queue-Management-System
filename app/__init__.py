@@ -155,7 +155,42 @@ def register_cli(app):
         db.session.commit()
         click.echo(f"Admin account created for {email}.")
 
+    @app.cli.command("seed-demo")
+    @click.option("--count", default=10, help="Number of demo students to create")
+    def seed_demo(count):
+        import random
+        from app.extensions import db
+        from app.models.student import Student
+        from app.models.queue import QueueEntry
 
+        first_names = ["Aarav", "Bina", "Chetan", "Divya", "Eshan", "Farah", "Gita", "Hari"]
+        last_names = ["Sharma", "Poudel", "Gurung", "Thapa", "Rai", "Karki"]
+
+        created = 0
+        for i in range(count):
+            email = f"demo.student{i}@example.com"
+            if Student.query.filter_by(email=email).first():
+                continue
+            student = Student(
+                full_name=f"{random.choice(first_names)} {random.choice(last_names)}",
+                email=email,
+            )
+            student.set_password("DemoPass123!")
+            db.session.add(student)
+            db.session.flush()
+
+            if random.random() < 0.6:
+                entry = QueueEntry(
+                    token_number=f"Q-DEMO-{i:04d}",
+                    student_id=student.id,
+                    status=random.choice([QueueEntry.STATUS_WAITING, QueueEntry.STATUS_COMPLETED]),
+                )
+                db.session.add(entry)
+            created += 1
+
+        db.session.commit()
+        click.echo(f"Created {created} demo students.")
+        
 def configure_logging(app):
     if app.testing:
         return
