@@ -520,3 +520,9 @@ Flash messages now render as auto-dismissing toasts instead of static
 banners. Destructive actions (cancel, skip) require a confirmation
 dialog. Students receive an email when their token is called and when
 their password is changed.
+
+## 📅 Day 32 – CSV Export & Demo Data
+
+Admins can export the student roster and payment records to CSV.
+Added a `seed-demo` CLI command for quickly populating a demo
+environment.
