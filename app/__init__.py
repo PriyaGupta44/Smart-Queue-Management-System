@@ -7,6 +7,7 @@ from flask_wtf.csrf import CSRFError
 
 from config import config
 from app.extensions import db, login_manager, csrf, migrate, mail
+from app.models import student, queue, payment, audit_log  # noqa: F401
 
 
 def create_app(config_name="default"):
