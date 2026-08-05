@@ -15,6 +15,8 @@ from app.models.queue import QueueEntry
 from app.models.payment import Payment
 from app.models.student import Student
 
+from app.admin.forms import AddStudentForm
+
 admin_bp = Blueprint("admin", __name__)
 
 DASHBOARD_PER_PAGE = 10
@@ -293,3 +295,25 @@ def export_payments_csv():
         mimetype="text/csv",
         headers={"Content-Disposition": "attachment; filename=payments.csv"},
     )
+
+
+@admin_bp.route("/students/add", methods=["GET", "POST"])
+@login_required
+@admin_required
+def add_student():
+    form = AddStudentForm()
+    if form.validate_on_submit():
+        existing = Student.query.filter_by(email=form.email.data.lower()).first()
+        if existing:
+            flash("An account with that email already exists.", "danger")
+            return render_template("admin/add_student.html", form=form)
+
+        student = Student(full_name=form.full_name.data, email=form.email.data.lower())
+        student.set_password(form.password.data)
+        db.session.add(student)
+        db.session.commit()
+
+        flash(f"Student {student.full_name} added.", "success")
+        return redirect(url_for("admin.students"))
+
+    return render_template("admin/add_student.html", form=form)
